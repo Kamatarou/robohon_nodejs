@@ -11,6 +11,12 @@ const express = require('express');
 //admin.initializeApp();
 
 const app = express();
+var bodyParser = require('body-parser');
+
+//body-parserの設定
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 //お試しレスポンス１
 app.get('/timestamp', (request, response) => {
   response.send(`${Date.now()}`);
@@ -43,5 +49,8 @@ app.get('/api/v1/hubapi', (require, response) =>{
         response.status(400).json(json_E);
     }
 });
+
+var router = require('./route/v1/');
+app.use('/api/test/v1', router);
 
 exports.app = functions.https.onRequest(app);
