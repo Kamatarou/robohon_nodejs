@@ -1,3 +1,9 @@
+/*****************
+ * 
+ * 定義セクション
+ * 
+ *****************/
+
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 //Cloud Functionsを動かす大事なものが詰まったFirebase SDK、これ必須
 const functions = require('firebase-functions');
@@ -11,11 +17,21 @@ const express = require('express');
 //admin.initializeApp();
 
 const app = express();
+
 var bodyParser = require('body-parser');
 
 //body-parserの設定
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+//自作関数の読み取り
+var funcs = require('./src/functions.js'); 
+
+/******************
+ * 
+ * 処理セクション
+ * 
+ ******************/
 
 //お試しレスポンス１
 app.get('/timestamp', (request, response) => {
@@ -26,6 +42,18 @@ app.get('/timestamp', (request, response) => {
 app.get('/message', (request, response) => {
     var msg = "たくさんのメッセージですはようメッセージまみれになろうや";
     response.send(msg);
+});
+
+//お試しレスポンス3
+app.get('/funcs', (require, response) => {
+    if(require.query.q){
+        var result = funcs.hensu(require.query.q,12345);
+    }
+    else{
+        var result = funcs.result();
+    }
+    //var module = funcs.module();
+    response.send(result);
 });
 
 //お試しAPI
@@ -50,7 +78,8 @@ app.get('/api/v1/hubapi', (require, response) =>{
     }
 });
 
-var router = require('./route/v1/');
-app.use('/api/test/v1', router);
+//他所のディレクトリ下にあるindex.jsファイルを引っ張ってきてuseでつかるように
+//var router = require('./route/v1/');
+//app.use('/api/test/v1', router);
 
 exports.app = functions.https.onRequest(app);
