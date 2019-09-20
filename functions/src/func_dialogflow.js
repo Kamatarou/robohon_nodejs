@@ -7,11 +7,21 @@
  */
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
+<<<<<<< HEAD
 
 //結果受け取る変数
 var result;
 
 
+=======
+
+//結果受け取る変数
+var result;
+//DialogflowのProjectID
+const projectId = 'chat001-16c14';
+//他とかぶりのない一意なセッションID
+const sessionId = uuid.v4();
+>>>>>>> master
 
 /**
  * 
@@ -20,6 +30,7 @@ var result;
 */ 
 
 exports.get_Intent = async function(){
+<<<<<<< HEAD
         //DialogflowのProjectID
         const projectId = 'chat001-16c14';
         //他とかぶりのない一意なセッションID
@@ -31,6 +42,14 @@ exports.get_Intent = async function(){
         
         let
 
+=======
+
+
+        // 接続部分
+        const sessionClient = new dialogflow.SessionsClient();
+        const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+        
+>>>>>>> master
         //取得
         const request = {
             session: sessionPath,
@@ -43,7 +62,11 @@ exports.get_Intent = async function(){
           };
 
         
+<<<<<<< HEAD
         console.log("await")
+=======
+        console.log("await");
+>>>>>>> master
         const responses = await sessionClient.detectIntent(request);
         console.log('Detected intent');
         console.log("result->" + responses[0]);
@@ -55,4 +78,8 @@ exports.get_Intent = async function(){
         } else {
           console.log(`  No intent matched.`);
         }
+<<<<<<< HEAD
+=======
+        return responses[0];
+>>>>>>> master
     }
