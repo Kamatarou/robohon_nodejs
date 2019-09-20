@@ -5,33 +5,52 @@
  * 宣言セクション
  * 
  */
-//
 const dialogflow = require('dialogflow');
+const uuid = require('uuid');
 
-//dialogflowのRESTAPI
-const URI_DF = "";
-var json_result ={};
-
+//結果受け取る変数
+var result;
+//DialogflowのProjectID
+const projectId = 'chat001-16c14';
+//他とかぶりのない一意なセッションID
+const sessionId = uuid.v4();
 
 /**
  * 
  * 処理セクション
  * 
-*/
+*/ 
+
+exports.get_Intent = async function(){
 
 
-module.exports = class DialoglowAPI {
-    constructor(){
-        // Dialogflowの接続情報を設定
-        let client_option = {
-            project_id: "chat001-16c14", // DialogflowのProject ID
+        // 接続部分
+        const sessionClient = new dialogflow.SessionsClient();
+        const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+        
+        //取得
+        const request = {
+            session: sessionPath,
+            queryInput: {
+              text: {
+                text: 'こんにちは',
+                languageCode: 'ja',
+              },
+            },
+          };
+
+        
+        console.log("await");
+        const responses = await sessionClient.detectIntent(request);
+        console.log('Detected intent');
+        console.log("result->" + responses[0]);
+        const result = responses[0].queryResult;
+        console.log(`  Query: ${result.queryText}`);
+        console.log(`  Response: ${result.fulfillmentText}`);
+        if (result.intent) {
+          console.log(`  Intent: ${result.intent.displayName}`);
+        } else {
+          console.log(`  No intent matched.`);
         }
-        client_option.credentials = {
-            client_email: client_email // DialogflowのService Account
-            private_key: private_key // GCPで生成したprivate key
-        }
-
-        this.sessionClient = new dialogflow.SessionsClient(client_option);
-        this.sessionPath = this.sessionClient.sessionPath(prject_id, project_id);
+        return responses[0];
     }
-}

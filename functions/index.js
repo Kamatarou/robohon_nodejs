@@ -71,8 +71,12 @@ app.get('/api/v1/p1/testapi', (request, response) =>{
 //お試しAPI2
 app.get('/api/v1/p2/testapi', (request, response) =>{
     response.header('Content-Type', 'application/json; charset=utf-8');
-    var result = func_dialogflowAPI.get_Intent();
-    response.send(result);
+    var result;
+    func_dialogflowAPI.get_Intent().then(value =>{
+        response.send(value);
+        console.log("あいう");
+    });
+    console.log("kakiku");
 });
 
 //お試しAPI3
