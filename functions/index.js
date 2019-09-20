@@ -24,8 +24,13 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+/************
+ * 自作関数類
+ ************/
 //自作関数の読み取り
-var funcs = require('./src/functions.js'); 
+const funcs = require('./src/functions.js'); 
+//Dialogflow周りの受け渡し諸々を行う関数の読み取り
+const func_dialogflowAPI = require('./src/func_dialogflow.js');
 
 /******************
  * 
@@ -57,14 +62,21 @@ app.get('/funcs', (require, response) => {
 });
 
 //お試しAPI
-app.get('/api/v1/testapi', (request, response) =>{
+app.get('/api/v1/p1/testapi', (request, response) =>{
     response.header('Content-Type', 'application/json; charset=utf-8');
     var json_R = { Result : "OK" , message : "Hello!!!!!!!!!"};
     response.status(200).json(json_R);
 });
 
-//本題
-app.get('/api/v1/hubapi', (require, response) =>{
+//お試しAPI2
+app.get('/api/v1/p2/testapi', (request, response) =>{
+    response.header('Content-Type', 'application/json; charset=utf-8');
+    var result = func_dialogflowAPI.get_Intent();
+    response.send(result);
+});
+
+//お試しAPI3
+app.get('/api/v1/p3/hubapi', (require, response) =>{
     //?sentence=文のなかみ
     response.header('Content-Type', 'application/json; charset=utf-8');
     var sentence = require.query.s;
@@ -74,7 +86,7 @@ app.get('/api/v1/hubapi', (require, response) =>{
     }
     else{
         var json_E = { Result : "NG" , message : "You Mast input 'sentence'"};
-        response.status(400).json(json_E);
+        response.status(500).json(json_E);
     }
 });
 
