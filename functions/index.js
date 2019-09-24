@@ -100,6 +100,7 @@ app.get('/api/v1/hubapi',(require,response)=>{
     if(sentence){
         func_dialogflowAPI.get_Intent(sentence).then(value =>{
             var json_R = value;
+            
             response.status(200).json(json_R);
         });
     }
