@@ -19,11 +19,24 @@ const firebaseConfig = {
   };
   firebase.initializeApp(firebaseConfig);
 
-var database = firebase.database;
+var database = firebase.database();
 
 /**
  * 
  * 処理セクション
  * 
 */ 
-function RTDBSender(){}
+exports.RTDBTester= function(Txt){
+  if(!Txt){ Txt = "あああ"; }
+  console.log("Text->"+ Txt);
+  database.ref('test/').push().set({test : "hoge" , foo : "bar"}
+  ,function(error){
+    if(error){
+      return {Result : "NG" , Stats : 200};
+    }else{
+      return {Result : "OK" , Stats : 500};
+    }
+  });
+}
+
+exports.RTDBSender = function(Txt){}

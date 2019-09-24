@@ -31,6 +31,8 @@ app.use(bodyParser.json());
 const funcs = require('./src/functions.js'); 
 //Dialogflow周りの受け渡し諸々を行う関数の読み取り
 const func_dialogflowAPI = require('./src/func_dialogflow.js');
+//FirebaseRealtimeDB周りの投げ飛ばしを行う関数の読み取り
+const func_Firebase = require('./src/func_FBRTDB.js');
 
 /******************
  * 
@@ -65,6 +67,7 @@ app.get('/funcs', (require, response) => {
 app.get('/api/v1/p1/testapi', (request, response) =>{
     response.header('Content-Type', 'application/json; charset=utf-8');
     var json_R = { Result : "OK" , message : "Hello!!!!!!!!!"};
+    console.log("message->" + json_R.message)
     response.status(200).json(json_R);
 });
 
@@ -79,7 +82,6 @@ app.get('/api/v1/p2/testapi', (request, response) =>{
 });
 
 //お試しAPI3
-///api/v1/p3/hubapi
 app.get('/api/v1/p3/testapi', (require, response) =>{
     //?sentence=文のなかみ
     response.header('Content-Type', 'application/json; charset=utf-8');
@@ -94,6 +96,16 @@ app.get('/api/v1/p3/testapi', (require, response) =>{
     }
 });
 
+//お試しAPI4
+app('/api/v1/p4/testapi', (request, response) =>{
+    var result = func_Firebase.RTDBTester();
+    response.json(result);
+});
+
+
+/**
+ * 本番API
+ **/
 app.get('/api/v1/hubapi',(require,response)=>{
     response.header('Content-Type', 'application/json; charset=utf-8');
     var sentence = require.query.s;
@@ -109,6 +121,7 @@ app.get('/api/v1/hubapi',(require,response)=>{
         response.status(500).json(json_E);
     }
 });
+
 
 //他所のディレクトリ下にあるindex.jsファイルを引っ張ってきてuseでつかるように
 //var router = require('./route/v1/');
