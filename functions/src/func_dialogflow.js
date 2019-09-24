@@ -7,13 +7,6 @@
  */
 const dialogflow = require('dialogflow');
 const uuid = require('uuid');
-<<<<<<< HEAD
-
-//結果受け取る変数
-var result;
-
-
-=======
 
 //結果受け取る変数
 var result;
@@ -21,7 +14,7 @@ var result;
 const projectId = 'chat001-16c14';
 //他とかぶりのない一意なセッションID
 const sessionId = uuid.v4();
->>>>>>> master
+
 
 /**
  * 
@@ -29,44 +22,30 @@ const sessionId = uuid.v4();
  * 
 */ 
 
-exports.get_Intent = async function(){
-<<<<<<< HEAD
-        //DialogflowのProjectID
-        const projectId = 'chat001-16c14';
-        //他とかぶりのない一意なセッションID
-        const sessionId = uuid.v4();
-
+exports.get_Intent = async function(Txt){
         // 接続部分
         const sessionClient = new dialogflow.SessionsClient();
         const sessionPath = sessionClient.sessionPath(projectId, sessionId);
-        
-        let
-
-=======
-
-
-        // 接続部分
-        const sessionClient = new dialogflow.SessionsClient();
-        const sessionPath = sessionClient.sessionPath(projectId, sessionId);
-        
->>>>>>> master
+        if(Txt){
+          console.log("text->" + Txt);
+        }
+        else{
+          var err = {Result : "NG", Message:"Don't Get Texts"};
+          return err;
+        }
+    
         //取得
         const request = {
             session: sessionPath,
             queryInput: {
               text: {
-                text: 'こんにちは',
+                text: Txt,
                 languageCode: 'ja',
               },
             },
           };
 
-        
-<<<<<<< HEAD
         console.log("await")
-=======
-        console.log("await");
->>>>>>> master
         const responses = await sessionClient.detectIntent(request);
         console.log('Detected intent');
         console.log("result->" + responses[0]);
@@ -75,11 +54,10 @@ exports.get_Intent = async function(){
         console.log(`  Response: ${result.fulfillmentText}`);
         if (result.intent) {
           console.log(`  Intent: ${result.intent.displayName}`);
+          var json = {Result : "OK", Response : result.fulfillmentText, Intent : result.intent.displayName};
         } else {
           console.log(`  No intent matched.`);
+          var json = {Result : "OK", Response : result.fulfillmentText, Intent : "No intent matched"};
         }
-<<<<<<< HEAD
-=======
-        return responses[0];
->>>>>>> master
+        return json;
     }

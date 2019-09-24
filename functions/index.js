@@ -71,8 +71,7 @@ app.get('/api/v1/p1/testapi', (request, response) =>{
 //お試しAPI2
 app.get('/api/v1/p2/testapi', (request, response) =>{
     response.header('Content-Type', 'application/json; charset=utf-8');
-    var result;
-    func_dialogflowAPI.get_Intent().then(value =>{
+    func_dialogflowAPI.get_Intent("こんにちは").then(value =>{
         response.send(value);
         console.log("あいう");
     });
@@ -80,7 +79,8 @@ app.get('/api/v1/p2/testapi', (request, response) =>{
 });
 
 //お試しAPI3
-app.get('/api/v1/p3/hubapi', (require, response) =>{
+///api/v1/p3/hubapi
+app.get('/api/v1/p3/testapi', (require, response) =>{
     //?sentence=文のなかみ
     response.header('Content-Type', 'application/json; charset=utf-8');
     var sentence = require.query.s;
@@ -89,7 +89,22 @@ app.get('/api/v1/p3/hubapi', (require, response) =>{
         response.status(200).json(json_R);
     }
     else{
-        var json_E = { Result : "NG" , message : "You Mast input 'sentence'"};
+        var json_E = { Result : "NG" , message : "You Mast input 'sentence' (?s=<free word>)"};
+        response.status(500).json(json_E);
+    }
+});
+
+app.get('/api/v1/hubapi',(require,response)=>{
+    response.header('Content-Type', 'application/json; charset=utf-8');
+    var sentence = require.query.s;
+    if(sentence){
+        func_dialogflowAPI.get_Intent(sentence).then(value =>{
+            var json_R = value;
+            response.status(200).json(json_R);
+        });
+    }
+    else{
+        var json_E = { Result : "NG" , Response : "You Mast input 'sentence' (?s=<free word>)"};
         response.status(500).json(json_E);
     }
 });
