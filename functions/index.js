@@ -98,9 +98,9 @@ app.get('/api/v1/p3/testapi', (require, response) =>{
 
 //お試しAPI4
 app.get('/api/v1/p4/testapi', (request, response) =>{
-    func_Firebase.RTDBTester().then(value=>{
+    func_Firebase.RTDBSender("てすと","Bot").then(value=>{
         console.log("result ->" + value);
-        response.status(200).send(value); 
+        response.status(200).send(); 
     })
 });
 
@@ -112,9 +112,10 @@ app.get('/api/v1/hubapi',(require,response)=>{
     response.header('Content-Type', 'application/json; charset=utf-8');
     var sentence = require.query.s;
     if(sentence){
+        func_Firebase.RTDBSender(sentence,"Android");
         func_dialogflowAPI.get_Intent(sentence).then(value =>{
             var json_R = value;
-            
+            func_Firebase.RTDBSender(json_R.Response,"Bot");
             response.status(200).json(json_R);
         });
     }
