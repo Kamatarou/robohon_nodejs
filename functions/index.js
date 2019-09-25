@@ -97,9 +97,11 @@ app.get('/api/v1/p3/testapi', (require, response) =>{
 });
 
 //お試しAPI4
-app('/api/v1/p4/testapi', (request, response) =>{
-    var result = func_Firebase.RTDBTester();
-    response.json(result);
+app.get('/api/v1/p4/testapi', (request, response) =>{
+    func_Firebase.RTDBTester().then(value=>{
+        console.log("result ->" + value);
+        response.status(200).send(value); 
+    })
 });
 
 
