@@ -33,6 +33,8 @@ const funcs = require('./src/functions.js');
 const func_dialogflowAPI = require('./src/func_dialogflow.js');
 //FirebaseRealtimeDB周りの投げ飛ばしを行う関数の読み取り
 const func_Firebase = require('./src/func_FBRTDB.js');
+//NaturalLanguage周りの受け渡しを行う関数の読み取り
+const func_NaturalLang = require('./src/func_NaturalLang.js');
 
 /******************
  * 
@@ -101,6 +103,15 @@ app.get('/api/v1/p4/testapi', (request, response) =>{
     func_Firebase.RTDBSender("てすと","Bot").then(value=>{
         console.log("result ->" + value);
         response.status(200).send(); 
+    })
+});
+
+//お試しAPI5
+app.get('/api/v1/p5/testapi', (request, response) =>{
+    func_NaturalLang.get_Sentiment().then(value=>{
+        console.log("result ->" + value);
+        var json = {}
+        response.status(200).send(value); 
     })
 });
 

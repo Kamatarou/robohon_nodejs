@@ -16,9 +16,13 @@ const client = new language.LanguageServiceClient();
  * 処理セクション
  * 
 */ 
-async function quickstart() {
-  // The text to analyze
-  const text = 'こんにちは！今日はとてもいい天気です!!!3日ぶりです!!!';
+exports.get_Sentiment = async function(Text) {
+  // 分析したい文字を代入
+  const text = "こんにちは！今日はとてもいい天気です!!!3日ぶりです!!!";
+  if(Text){
+    const text = Text;
+  }
+      
 
   const document = {
     content: text,
@@ -26,15 +30,16 @@ async function quickstart() {
     language : "ja"
   };
 
-  // Detects the sentiment of the text
+  // 文字から感情を検出する
   const [result] = await client.analyzeSentiment({document: document});
-  const sentiment = result.documentSentiment;
+  const docsentiment = result.documentSentiment;
 
+  //いろいろ表示
   console.log(`Text: ${text}`);
-  console.log(`Sentiment score: ${sentiment.score}`);
-  console.log(`Sentiment magnitude: ${sentiment.magnitude}`);
+  console.log(`Sentiment score: ${docsentiment.score}`);
+  console.log(`Sentiment magnitude: ${docsentiment.magnitude}`);
   console.log(result.language);
-  console.log(result);
+  console.log("--------------");
+  console.log(result.sentences);
+  return result;
 }
-
-quickstart();
