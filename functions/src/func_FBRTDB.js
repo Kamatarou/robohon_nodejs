@@ -93,3 +93,38 @@ exports.RTDBSender = async function(Txt,name){
     }
   });
 }
+
+exports.RTDBSend_Sentiment = async function(Sentiment){
+  //接続準備
+  if(!Sentiment){
+    return;
+  }
+  console.log(Sentiment);
+  var ref = database.ref("sentiment/").push();
+  console.log(ref)
+  var key = ref.key;
+  var RawTxt = Sentiment.text;
+  var docScore = Sentiment.score;
+  var docMag = Sentiment.magnitude;
+  console.log(RawTxt);
+
+  var json = {
+    firebasekey : key,
+    Text : RawTxt,
+    Score : docScore,
+    Magnitude : docMag
+  };
+
+  //接続
+  await ref.set(json , function(err){
+    if(err){
+      //接続失敗
+      console.error(err);
+    }
+    else{
+      //接続成功
+      console.log("Success Send");
+      //console.log("send Data-> " + json);
+    }
+  });
+}

@@ -18,9 +18,10 @@ const client = new language.LanguageServiceClient();
 */ 
 exports.get_Sentiment = async function(Text) {
   // 分析したい文字を代入
-  const text = "こんにちは！今日はとてもいい天気です!!!3日ぶりです!!!";
-  if(Text){
-    const text = Text;
+  const text = Text;
+  console.log("Sentiment->" + text);
+  if(!Text){
+    return {Result: "NG" , Text : "No Text"};
   }
       
 
@@ -41,5 +42,5 @@ exports.get_Sentiment = async function(Text) {
   console.log(result.language);
   console.log("--------------");
   console.log(result.sentences);
-  return result;
+  return {Result:"OK", Text : text, score : docsentiment.score, magnitude : docsentiment.magnitude};
 }

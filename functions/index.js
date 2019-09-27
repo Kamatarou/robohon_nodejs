@@ -108,9 +108,8 @@ app.get('/api/v1/p4/testapi', (request, response) =>{
 
 //お試しAPI5
 app.get('/api/v1/p5/testapi', (request, response) =>{
-    func_NaturalLang.get_Sentiment().then(value=>{
+    func_NaturalLang.get_Sentiment("こんにちは").then(value=>{
         console.log("result ->" + value);
-        var json = {}
         response.status(200).send(value); 
     })
 });
@@ -128,6 +127,9 @@ app.get('/api/v1/hubapi',(require,response)=>{
             var json_R = value;
             func_Firebase.RTDBSender(json_R.Response,"Bot");
             response.status(200).json(json_R);
+        });
+        func_NaturalLang.get_Sentiment(sentence).then(result =>{
+            func_Firebase.RTDBSend_Sentiment(result);
         });
     }
     else{
