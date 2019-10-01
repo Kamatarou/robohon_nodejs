@@ -69,6 +69,8 @@ exports.RTDBSender = async function(Txt,name){
     return
   }
 
+
+  var fkey;
   //接続準備
   var ref = database.ref("chat/").push();
   var key = ref.key;
@@ -89,24 +91,25 @@ exports.RTDBSender = async function(Txt,name){
     else{
       //接続成功
       console.log("Success Send");
+      fkey = json.firebasekey
       //console.log("send Data-> " + json);
     }
   });
+  return fkey;
 }
 
-exports.RTDBSend_Sentiment = async function(Sentiment){
+exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
   //接続準備
   if(!Sentiment){
     return;
   }
-  console.log(Sentiment);
-  var ref = database.ref("sentiment/").push();
-  console.log(ref)
+  console.log("ResultSentiment->" + Sentiment.Result);
+  var ref = database.ref("sentiment/" + fkey + "/");
   var key = ref.key;
-  var RawTxt = Sentiment.text;
+  var RawTxt = Sentiment.Text;
   var docScore = Sentiment.score;
   var docMag = Sentiment.magnitude;
-  console.log(RawTxt);
+  console.log("RawTxt->"+RawTxt);
 
   var json = {
     firebasekey : key,

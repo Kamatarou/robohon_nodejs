@@ -16,7 +16,7 @@ const client = new language.LanguageServiceClient();
  * 処理セクション
  * 
 */ 
-exports.get_Sentiment = async function(Text) {
+exports.get_Sentiment = async function(Text,fkey) {
   // 分析したい文字を代入
   const text = Text;
   console.log("Sentiment->" + text);
@@ -40,7 +40,6 @@ exports.get_Sentiment = async function(Text) {
   console.log(`Sentiment score: ${docsentiment.score}`);
   console.log(`Sentiment magnitude: ${docsentiment.magnitude}`);
   console.log(result.language);
-  console.log("--------------");
-  console.log(result.sentences);
-  return {Result:"OK", Text : text, score : docsentiment.score, magnitude : docsentiment.magnitude};
+  var sentiment = {Result:"OK", Text : text, score : docsentiment.score, magnitude : docsentiment.magnitude};
+  return sentiment;
 }

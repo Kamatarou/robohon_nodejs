@@ -121,15 +121,18 @@ app.get('/api/v1/p5/testapi', (request, response) =>{
 app.get('/api/v1/hubapi',(require,response)=>{
     response.header('Content-Type', 'application/json; charset=utf-8');
     var sentence = require.query.s;
+    //var faceUser = require.query.face;
+    var fkey;
     if(sentence){
-        func_Firebase.RTDBSender(sentence,"Android");
+        func_Firebase.RTDBSender(sentence,"Android").then(key =>{fkey = key});
         func_dialogflowAPI.get_Intent(sentence).then(value =>{
             var json_R = value;
-            func_Firebase.RTDBSender(json_R.Response,"Bot");
-            response.status(200).json(json_R);
-        });
-        func_NaturalLang.get_Sentiment(sentence).then(result =>{
-            func_Firebase.RTDBSend_Sentiment(result);
+            func_NaturalLang.get_Sentiment(sentence).then(result =>{
+                console.log("fkey->"+fkey);
+                func_Firebase.RTDBSend_Sentiment(result,fkey);
+                func_Firebase.RTDBSender(json_R.Response,"Bot");
+                response.status(200).json(json_R);
+            }); 
         });
     }
     else{
