@@ -131,3 +131,16 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
     }
   });
 }
+
+exports.RTDBSend_Fallback = async function(Intent){
+  
+}
+
+exports.RTDBGetter = async function(){
+  console.log("It's Now Working");
+  var ref = database.ref("sentiment/");
+  ref.on("child_added",function(snapshot, prevChildKey){
+    var post = snapshot.val();
+    console.log("post" + post);
+  });
+}

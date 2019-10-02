@@ -41,6 +41,10 @@ const func_NaturalLang = require('./src/func_NaturalLang.js');
  * 処理セクション
  * 
  ******************/
+if(func_Firebase){
+    console.log("Alive");
+    func_Firebase.RTDBGetter();
+}
 
 //お試しレスポンス１
 app.get('/timestamp', (request, response) => {
@@ -76,7 +80,7 @@ app.get('/api/v1/p1/testapi', (request, response) =>{
 //お試しAPI2
 app.get('/api/v1/p2/testapi', (request, response) =>{
     response.header('Content-Type', 'application/json; charset=utf-8');
-    func_dialogflowAPI.get_Intent("こんにちは").then(value =>{
+    func_dialogflowAPI.get_Intent("昨日は楽しかったなぁ").then(value =>{
         response.send(value);
         console.log("あいう");
     });
@@ -140,7 +144,6 @@ app.get('/api/v1/hubapi',(require,response)=>{
         response.status(500).json(json_E);
     }
 });
-
 
 //他所のディレクトリ下にあるindex.jsファイルを引っ張ってきてuseでつかるように
 //var router = require('./route/v1/');
