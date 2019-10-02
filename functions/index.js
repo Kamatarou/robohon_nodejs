@@ -41,8 +41,9 @@ const func_NaturalLang = require('./src/func_NaturalLang.js');
  * 処理セクション
  * 
  ******************/
+
+//関数が読めたときにゲッター関数常駐(?)
 if(func_Firebase){
-    console.log("Alive");
     func_Firebase.RTDBGetter();
 }
 

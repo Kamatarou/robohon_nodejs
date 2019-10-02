@@ -50,9 +50,10 @@ exports.get_Intent = async function(Txt){
         console.log('Detected intent');
         console.log("result->" + responses[0]);
         const result = responses[0].queryResult;
+        const parameters = result.parameters[0];
         console.log(`  Query: ${result.queryText}`);
         console.log(`  Response: ${result.fulfillmentText}`);
-        console.log(`  Propaty: ${result.outputContexts[0].name}`);
+        console.log(`  Propaty: ${parameters}`);
         if (result.intent) {
           console.log(`  Intent: ${result.intent.displayName}`);
           var json = {Result : "OK", Response : result.fulfillmentText, Intent : result.intent.displayName};
