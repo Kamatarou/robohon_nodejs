@@ -6,6 +6,10 @@ const intentsClient = new dialogflow.IntentsClient();
 
 const projectId = 'chat001-16c14';
 
+const intentId = "b55b2c95-537c-4270-8a1e-174342dc3e3a";
+
+const uuid = require('uuid');
+
 // The path to identify the agent that owns the intents.
 const projectAgentPath = intentsClient.projectAgentPath(projectId);
 
@@ -18,6 +22,7 @@ console.log(projectAgentPath);
 
 // Send the request for listing intents.
 const [response] = await intentsClient.listIntents(request);
+console.log(response);
 response.forEach(intent => {
   console.log('====================');
   console.log(`Intent name: ${intent.name}`);
@@ -38,50 +43,79 @@ response.forEach(intent => {
 });
 }
 
-async function dfc(){
+async function dfu(){
+
+const name = "projects/" + projectId + "/agent/intents/" + intentId;
 
 // The path to identify the agent that owns the created intent.
 const agentPath = intentsClient.projectAgentPath(projectId);
 
-const trainingPhrases = [];
-
-trainingPhrasesParts.forEach(trainingPhrasesPart => {
-  const part = {
-    text: trainingPhrasesPart,
-  };
-
-  // Here we create a new training phrase for each provided part.
-  const trainingPhrase = {
-    type: 'EXAMPLE',
-    parts: [part],
-  };
-
-  trainingPhrases.push(trainingPhrase);
-});
-
-const messageText = {
-  text: messageTexts,
+// Here we create a new training phrase for each provided part.
+const trainingPhrase = {
+  type: 'EXAMPLE',
+  parts: [{
+    text : "さんぷる"
+  },
+  {
+    text : "ほげほげ"
+  }]
 };
 
 const message = {
-  text: messageText,
-};
+  text : {
+    text : [ "うーばー" , "ばー"]
+  }
+}
 
 const intent = {
-  displayName: displayName,
-  trainingPhrases: trainingPhrases,
-  messages: [message],
+  displayName: "intent1",
+  trainingPhrases: [trainingPhrase],
+  messages : [message]
 };
 
-const createIntentRequest = {
+const updateIntentRequest = {
   parent: agentPath,
+  languageCode : "ja",
   intent: intent,
 };
 
+const formattedName = intentsClient.intentPath(projectId,intentId);
+
+// Load the intent
+const Intents = await intentsClient.getIntent({
+  name : formattedName,
+  languageCode : "ja",
+  intentView : "INTENT_VIEW_FULL"
+});
+console.log(Intents);
+console.log(`Intent ${Intents[0].name} geted`);
+
+Intents.forEach(intent => {
+  if(intent){
+    console.log(`Intent name: ${intent.name}`);
+    console.log(`Intent display name: ${intent.displayName}`);
+    console.log("Intent Traning Phrase ->");
+    intent.trainingPhrases.forEach(trainingPhrase => {
+      //console.log(`\tTraning: ${trainingPhrase}`);
+      trainingPhrase.parts.forEach(part =>{
+        if(part){
+          console.log("part" + part.text);
+        }
+      });
+    });
+    console.log("Intent messages ->");
+    intent.messages.forEach(message => {
+      console.log(`\tTraning: ${message}`);
+    });
+
+  }
+});
+
 // Create the intent
-const responses = await intentsClient.createIntent(createIntentRequest);
-console.log(`Intent ${responses[0].name} created`);
+/*
+const responses = await intentsClient.batchUpdateIntents(updateIntentRequest);
+console.log(`Intent ${responses[0].name} updated`);*/
 }
 
 //dfl();
-//dfc();
+dfu();
