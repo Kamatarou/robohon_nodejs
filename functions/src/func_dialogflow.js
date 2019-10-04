@@ -21,7 +21,6 @@ const sessionId = uuid.v4();
  * 処理セクション
  * 
 */ 
-
 exports.get_Intent = async function(Txt){
         // 接続部分
         const sessionClient = new dialogflow.SessionsClient();
@@ -50,10 +49,19 @@ exports.get_Intent = async function(Txt){
         console.log('Detected intent');
         console.log("result->" + responses[0]);
         const result = responses[0].queryResult;
-        const parameters = result.parameters[0];
         console.log(`  Query: ${result.queryText}`);
         console.log(`  Response: ${result.fulfillmentText}`);
-        console.log(`  Propaty: ${parameters}`);
+        console.log(`  action: ${result.action}`);
+        console.log(`  Propaty: ${result.parameters}`);
+        console.log(`  End Dialog ${result.diagnosticInfo.fields}`);
+        JSON.parse(JSON.stringify(result.diagnosticInfo.fields.end_conversation),function(key,value){
+          console.log("     "+key +" : " + value);
+          if(!key){
+            JSON.parse(JSON.stringify(value),function(k,v){
+              console.log("     *"+k +" : " + v);
+            });
+          }
+        });
         if (result.intent) {
           console.log(`  Intent: ${result.intent.displayName}`);
           var json = {Result : "OK", Response : result.fulfillmentText, Intent : result.intent.displayName};
@@ -63,3 +71,4 @@ exports.get_Intent = async function(Txt){
         }
         return json;
     }
+

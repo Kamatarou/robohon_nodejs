@@ -81,11 +81,9 @@ app.get('/api/v1/p1/testapi', (request, response) =>{
 //お試しAPI2
 app.get('/api/v1/p2/testapi', (request, response) =>{
     response.header('Content-Type', 'application/json; charset=utf-8');
-    func_dialogflowAPI.get_Intent("昨日は楽しかったなぁ").then(value =>{
+    func_dialogflowAPI.get_Intent("こんにちは").then(value =>{
         response.send(value);
-        console.log("あいう");
     });
-    console.log("kakiku");
 });
 
 //お試しAPI3
