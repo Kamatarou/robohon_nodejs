@@ -158,7 +158,7 @@ exports.RTDBSend_Params = async function(params,fkey){
      outputContexts : result.outputContexts
    */
   var text = params.Response;
-  var propaty = params.propaty;
+  var propaty = params.Propaty;
   var outputContexts = params.outputContexts;
   console.log("******************************");
   console.log("text->"+text);

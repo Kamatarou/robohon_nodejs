@@ -1,0 +1,300 @@
+>おはよう
+{
+  "responseId": "4521ec6b-5007-4b00-97e7-62ead3334a0b-2a4c0c5e",
+  "queryResult": {
+    "queryText": "おはよう",
+    "parameters": {
+      "Emotion_greeting": "おはよう"
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "良い声だね！おはよう！今日はどんな気分かな？",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "良い声だね！おはよう！今日はどんな気分かな？"
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-followup",
+        "lifespanCount": 5,
+        "parameters": {
+          "Emotion_greeting.original": "おはよう",
+          "Emotion_greeting": "おはよう"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/chat001-16c14/agent/intents/f0c5fc73-abe2-4aa2-af4f-b2b43e65be41",
+      "displayName": "morning"
+    },
+    "intentDetectionConfidence": 1,
+    "languageCode": "ja"
+  }
+}
+
+-----------------------------
+>調子いいね
+{
+  "responseId": "478bfcea-2993-49c9-80bf-ac856e55ffa0-2a4c0c5e",
+  "queryResult": {
+    "queryText": "調子いいね",
+    "action": "morning.morning-happy",
+    "parameters": {
+      "Emotion_joy": "喜び"
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "良い感じだね！昨日は何時に寝たのかな？",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "良い感じだね！昨日は何時に寝たのかな？"
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-happy-followup",
+        "lifespanCount": 2,
+        "parameters": {
+          "Emotion_joy.original": "いい",
+          "Emotion_joy": "喜び"
+        }
+      },
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-followup",
+        "lifespanCount": 4,
+        "parameters": {
+          "Emotion_greeting": "おはよう",
+          "Emotion_joy.original": "いい",
+          "Emotion_joy": "喜び",
+          "Emotion_greeting.original": "おはよう"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/chat001-16c14/agent/intents/418298ef-f89d-4292-9c42-375f4b9ee021",
+      "displayName": "morning - happy"
+    },
+    "intentDetectionConfidence": 0.7207934,
+    "languageCode": "ja"
+  }
+}
+----------------------------------
+>深夜2時くらいかな
+{
+  "responseId": "aba7a6a9-56f3-46de-b78f-bbd527c3cbb6-2a4c0c5e",
+  "queryResult": {
+    "queryText": "深夜2時かな",
+    "action": "morning.morning-happy.morning-happy-sleeptime",
+    "parameters": {
+      "number": 2
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "9時間くらい寝ると、成績がよくなるんだって！",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "9時間くらい寝ると、成績がよくなるんだって！"
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-happy-followup",
+        "lifespanCount": 1,
+        "parameters": {
+          "number": 2,
+          "number.original": "2",
+          "Emotion_joy.original": "いい",
+          "Emotion_joy": "喜び"
+        }
+      },
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-followup",
+        "lifespanCount": 3,
+        "parameters": {
+          "Emotion_greeting": "おはよう",
+          "number": 2,
+          "Emotion_joy.original": "いい",
+          "Emotion_joy": "喜び",
+          "Emotion_greeting.original": "おはよう",
+          "number.original": "2"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/chat001-16c14/agent/intents/1821fa76-fcd0-484f-a359-0a7ba114915b",
+      "displayName": "morning - happy - sleeptime",
+      "endInteraction": true
+    },
+    "intentDetectionConfidence": 0.6301549,
+    "diagnosticInfo": {
+      "end_conversation": true
+    },
+    "languageCode": "ja"
+  }
+}
+
+***************************************
+>おはよう
+{
+  "responseId": "9f4b021a-ce0a-490c-bbd5-7a1e2273445c-2a4c0c5e",
+  "queryResult": {
+    "queryText": "おはよう",
+    "parameters": {
+      "Emotion_greeting": "おはよう"
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "A君おはよう！今日は元気かな？",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "A君おはよう！今日は元気かな？"
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-followup",
+        "lifespanCount": 5,
+        "parameters": {
+          "Emotion_greeting.original": "おはよう",
+          "Emotion_greeting": "おはよう"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/chat001-16c14/agent/intents/f0c5fc73-abe2-4aa2-af4f-b2b43e65be41",
+      "displayName": "morning"
+    },
+    "intentDetectionConfidence": 1,
+    "languageCode": "ja"
+  }
+}
+-------------------------------
+>調子悪いかも
+{
+  "responseId": "7a205d50-a80e-499b-8f70-c3714305c3d6-2a4c0c5e",
+  "queryResult": {
+    "queryText": "調子悪いかも",
+    "action": "morning.morning-custom",
+    "parameters": {
+      "Emotion_sad": "",
+      "Emotion_complaint": ""
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "遅く寝ると疲れるよ。よかったら何時に寝たか教えてくれるかな？",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "遅く寝ると疲れるよ。よかったら何時に寝たか教えてくれるかな？"
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-sad-followup",
+        "lifespanCount": 2,
+        "parameters": {
+          "Emotion_sad": "",
+          "Emotion_complaint.original": "",
+          "Emotion_complaint": "",
+          "Emotion_sad.original": ""
+        }
+      },
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-followup",
+        "lifespanCount": 4,
+        "parameters": {
+          "Emotion_greeting": "おはよう",
+          "Emotion_sad.original": "",
+          "Emotion_complaint.original": "",
+          "Emotion_greeting.original": "おはよう",
+          "Emotion_complaint": "",
+          "Emotion_sad": ""
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/chat001-16c14/agent/intents/88a3879d-1c0c-4a15-bd32-5d7600049138",
+      "displayName": "morning - sad"
+    },
+    "intentDetectionConfidence": 0.638253,
+    "languageCode": "ja"
+  }
+}
+----------------------------------
+>深夜2時かな
+{
+  "responseId": "9903a415-5638-4e85-84c5-53ae29b02d09-2a4c0c5e",
+  "queryResult": {
+    "queryText": "深夜2時かな",
+    "action": "morning.morning-custom.morning-sad-custom",
+    "parameters": {
+      "number": 2
+    },
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "2時は遅いよ。寝る子は育つ！早めに寝ようね。",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "2時は遅いよ。寝る子は育つ！早めに寝ようね。"
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-followup",
+        "lifespanCount": 3,
+        "parameters": {
+          "Emotion_complaint.original": "",
+          "Emotion_greeting.original": "おはよう",
+          "Emotion_complaint": "",
+          "number.original": "2",
+          "Emotion_sad": "",
+          "Emotion_greeting": "おはよう",
+          "number": 2,
+          "Emotion_sad.original": ""
+        }
+      },
+      {
+        "name": "projects/chat001-16c14/agent/sessions/b8ce6ba5-8f5c-3fcf-1e6c-582929e537bf/contexts/morning-sad-followup",
+        "lifespanCount": 1,
+        "parameters": {
+          "Emotion_sad": "",
+          "number": 2,
+          "Emotion_sad.original": "",
+          "Emotion_complaint.original": "",
+          "Emotion_complaint": "",
+          "number.original": "2"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/chat001-16c14/agent/intents/e2fe294b-709d-432d-a695-65dd53f6c865",
+      "displayName": "morning - sad - sleeptime",
+      "endInteraction": true
+    },
+    "intentDetectionConfidence": 0.6316944,
+    "diagnosticInfo": {
+      "end_conversation": true
+    },
+    "languageCode": "ja"
+  }
+}
+
+**************************************
