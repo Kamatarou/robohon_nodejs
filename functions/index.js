@@ -117,6 +117,15 @@ app.get('/api/v1/p5/testapi', (request, response) =>{
     })
 });
 
+//お試しAPI6
+app.get('/api/v1/p6/testapi', (request, response) =>{
+    var testj = {Result:"OK", Text : "テスト", score : 0.01, magnitude : 0.005};
+    var fkey = "0000000000000000";
+    func_Firebase.RTDBSend_Sentiment(testj,fkey).then(value=>{
+        console.log("result ->" + value);
+        response.status(200).send(); 
+    })
+});
 
 /**
  * 本番API

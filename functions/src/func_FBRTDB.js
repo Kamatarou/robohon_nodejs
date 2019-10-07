@@ -6,6 +6,8 @@
  */
 var admin = require('firebase-admin');
 var serviceAccount = require("../confidential/vik/chat001-16c14-firebase-adminsdk-yzgox-e0940b30ea.json");
+var moment = require('moment');
+require('moment-timezone');
 
 //firebaseの初期化やら認証やら
 admin.initializeApp({
@@ -109,13 +111,16 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
   var RawTxt = Sentiment.Text;
   var docScore = Sentiment.score;
   var docMag = Sentiment.magnitude;
+  var time = moment().tz("Asia/Tokyo").format("YYYY/MM/DD,HH:mm:ss");
+  console.log("time ->"+time);
   console.log("RawTxt->"+RawTxt);
 
   var json = {
     firebasekey : key,
     Text : RawTxt,
     Score : docScore,
-    Magnitude : docMag
+    Magnitude : docMag,
+    time : time
   };
 
   //接続
@@ -137,7 +142,7 @@ exports.RTDBSend_Fallback = async function(Intent){
 }
 
 exports.RTDBGetter = async function(){
-  console.log("It's Now Working");
+  console.log("RTFB Getter is Now Working");
   var ref = database.ref("sentiment/");
   ref.on("child_added",function(snapshot, prevChildKey){
     var post = snapshot.val();
