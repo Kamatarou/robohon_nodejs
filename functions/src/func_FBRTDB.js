@@ -137,6 +137,43 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
   });
 }
 
+exports.RTDBSend_Params = async function(params,fkey){
+  if(!params){
+    return;
+  }
+  if(!params.end_conversation){
+    //会話が終わってない場合
+    console.log("No End to conversation");
+    return;
+  }
+
+  var ref = database.ref("dfLog/" + fkey + "/");
+  var key = ref.key;
+  /**
+   * Result : "OK", 
+     Response : result.fulfillmentText, 
+     Intent : result.intent.displayName, 
+     end_conversation : EndFlg,
+     Propaty : result.Propaty,
+     outputContexts : result.outputContexts
+   */
+  var text = params.Response;
+  var propaty = params.propaty;
+  var outputContexts = params.outputContexts;
+  console.log("******************************");
+  console.log("text->"+text);
+  console.log("propary->");
+  JSON.parse(JSON.stringify(propaty) , function(key, value){
+    console.log(key +" : " + value);
+  });
+  console.log("outputContexts->");
+  JSON.parse(JSON.stringify(outputContexts) , function(key, value){
+    console.log(key +" : " + value);
+  });
+
+
+}
+
 exports.RTDBSend_Fallback = async function(Intent){
   
 }
@@ -147,5 +184,6 @@ exports.RTDBGetter = async function(){
   ref.on("child_added",function(snapshot, prevChildKey){
     var post = snapshot.val();
     console.log("post" + post);
+    console.log("prev" + prevChildKey);
   });
 }
