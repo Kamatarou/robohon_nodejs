@@ -92,7 +92,7 @@ exports.RTDBSender = async function(Txt,name){
     }
     else{
       //接続成功
-      console.log("Success Send");
+      console.log("Success Send *Normal*");
       fkey = json.firebasekey
       //console.log("send Data-> " + json);
     }
@@ -112,6 +112,7 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
   var docScore = Sentiment.score;
   var docMag = Sentiment.magnitude;
   var time = moment().tz("Asia/Tokyo").format("YYYY/MM/DD,HH:mm:ss");
+  var timestamp = moment().unix();
   console.log("time ->"+time);
   console.log("RawTxt->"+RawTxt);
 
@@ -120,7 +121,8 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
     Text : RawTxt,
     Score : docScore,
     Magnitude : docMag,
-    time : time
+    time : time,
+    timestamp : timestamp
   };
 
   //接続
@@ -131,7 +133,7 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
     }
     else{
       //接続成功
-      console.log("Success Send");
+      console.log("Success Send *Sentiment*");
       //console.log("send Data-> " + json);
     }
   });
@@ -146,32 +148,56 @@ exports.RTDBSend_Params = async function(params,fkey){
     console.log("No End to conversation");
     return;
   }
-
+  var phrase = "";
   var ref = database.ref("dfLog/" + fkey + "/");
   var key = ref.key;
-  /**
-   * Result : "OK", 
-     Response : result.fulfillmentText, 
-     Intent : result.intent.displayName, 
-     end_conversation : EndFlg,
-     Propaty : result.Propaty,
-     outputContexts : result.outputContexts
-   */
   var text = params.Response;
-  var propaty = params.Propaty;
   var outputContexts = params.outputContexts;
+  //取得
   console.log("******************************");
   console.log("text->"+text);
-  console.log("propary->");
-  JSON.parse(JSON.stringify(propaty) , function(key, value){
-    console.log(key +" : " + value);
-  });
   console.log("outputContexts->");
-  JSON.parse(JSON.stringify(outputContexts) , function(key, value){
-    console.log(key +" : " + value);
+  Object.keys(outputContexts).forEach(function(key){
+    console.log("key-->", key);
+    var field = outputContexts[key].parameters.fields;
+    if(field){
+      Object.keys(field).forEach(function(key){
+        if(key.indexOf(".original") == -1){
+          console.log(key," : ",field[key]);
+           if(field[key].stringValue){
+            phrase += field[key].stringValue;
+            phrase += ",";
+          }
+          if(field[key].numberValue){
+            phrase += field[key].numberValue;
+            phrase += ",";
+          }
+        }
+      });
+    }
   });
+  //末尾一文字削除して整形
+  phrase = phrase.slice(0,-1);
+  console.log("All Phrase->" + phrase);
 
+  //データセット
+  var json = {
+    firebasekey : key,
+    Phrase : phrase
+  };
 
+  //接続
+  await ref.set(json , function(err){
+    if(err){
+      //接続失敗
+      console.error(err);
+    }
+    else{
+      //接続成功
+      console.log("Success Send *Params*");
+      //console.log("send Data-> " + json);
+    }
+  });
 }
 
 exports.RTDBSend_Fallback = async function(Intent){
@@ -183,7 +209,7 @@ exports.RTDBGetter = async function(){
   var ref = database.ref("sentiment/");
   ref.on("child_added",function(snapshot, prevChildKey){
     var post = snapshot.val();
-    console.log("post" + post);
-    console.log("prev" + prevChildKey);
+    /*console.log("post" + post);
+    console.log("prev" + prevChildKey);*/
   });
 }

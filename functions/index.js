@@ -133,8 +133,9 @@ app.get('/api/v1/p7/testapi', (request, response) =>{
     var word = request.query.s;
     var fkey = "0000000000000000";
     func_dialogflowAPI.get_Intent(word).then(value =>{
-        func_Firebase.RTDBSend_Params(value,fkey);
-        response.send(value);
+        func_Firebase.RTDBSend_Params(value,fkey).then(v =>{
+            response.send(value);
+        });
     });
 });
 
@@ -150,7 +151,7 @@ app.get('/api/v1/hubapi',(require,response)=>{
         func_Firebase.RTDBSender(sentence,"Android").then(key =>{fkey = key});
         func_dialogflowAPI.get_Intent(sentence).then(value =>{
             var json_R = value;
-            //func_Firebase.RTDBSend_Params(json_R,fkey);
+            func_Firebase.RTDBSend_Params(json_R,fkey);
             func_NaturalLang.get_Sentiment(sentence).then(result =>{
                 console.log("fkey->"+fkey);
                 func_Firebase.RTDBSend_Sentiment(result,fkey);

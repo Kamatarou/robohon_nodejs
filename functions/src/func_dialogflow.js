@@ -56,7 +56,6 @@ exports.get_Intent = async function(Txt){
         if(result.diagnosticInfo){
           console.log(`  End Dialog`);
           EndFlg = true;
-          
         }
         if (result.intent) {
           console.log(`  Intent: ${result.intent.displayName}`);
