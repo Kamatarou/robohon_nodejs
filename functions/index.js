@@ -35,6 +35,10 @@ const func_dialogflowAPI = require('./src/func_dialogflow.js');
 const func_Firebase = require('./src/func_FBRTDB.js');
 //NaturalLanguage周りの受け渡しを行う関数の読み取り
 const func_NaturalLang = require('./src/func_NaturalLang.js');
+//NaturalLanguageの結果の集計を行う関数の読み取り
+const func_Collect = require('./src/collect.js');
+//集計結果をメールに送りつける関数の読み取り
+const func_Mail = require('./src/mail.js');
 
 /******************
  * 
@@ -139,6 +143,13 @@ app.get('/api/v1/p7/testapi', (request, response) =>{
     });
 });
 
+//お試しAPI8
+app.get('/api/v1/p8/testapi', (request, response) =>{
+    func_Collect.datapic();
+    func_Mail.mail();
+    response.status(200);
+});
+
 /**
  * 本番API
  **/
@@ -157,6 +168,8 @@ app.get('/api/v1/hubapi',(require,response)=>{
                 func_Firebase.RTDBSend_Sentiment(result,fkey);
                 func_Firebase.RTDBSender(json_R.Response,"Bot");
                 response.status(200).json(json_R);
+                func_Collect.datapic();
+                func_Mail.mail();
             }); 
         });
     }
