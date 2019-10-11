@@ -32,7 +32,7 @@ var transporter = mailer.createTransport({
       }
   });
   
-exports.mail =function(){  
+exports.mail = async function(){  
   refstats.once('value',function(data){
      mailAddress = data.child('mailAddress').val();
      console.log(mailAddress);
@@ -60,7 +60,7 @@ exports.mail =function(){
     setTimeout(dboff,5000);
 };
 
-function send(mailAddress,score,text,time){
+async function send(mailAddress,score,text,time){
   var mailset = {
     from: senderMailAddress,
     to: mailAddress,
@@ -68,7 +68,7 @@ function send(mailAddress,score,text,time){
     text: score + ' ' + text + ' ' + time
   };
 
-  transporter.sendMail(mailset,function(error,info){
+  await transporter.sendMail(mailset,function(error,info){
       if(error){
         console.log(error);
        }else{
@@ -77,8 +77,8 @@ function send(mailAddress,score,text,time){
      });
 };
 
-function dboff(){
-  db.app.delete();
+async function dboff(){
+  await db.app.delete();
   console.log('dboff');
   //process.exit(1);
 };

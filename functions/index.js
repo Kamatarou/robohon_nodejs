@@ -147,7 +147,9 @@ app.get('/api/v1/p7/testapi', (request, response) =>{
 app.get('/api/v1/p8/testapi', (request, response) =>{
     func_Collect.datapic();
     func_Mail.mail();
-    response.status(200);
+
+    response.status(200).send();
+    
 });
 
 /**
@@ -168,8 +170,9 @@ app.get('/api/v1/hubapi',(require,response)=>{
                 func_Firebase.RTDBSend_Sentiment(result,fkey);
                 func_Firebase.RTDBSender(json_R.Response,"Bot");
                 response.status(200).json(json_R);
-                func_Collect.datapic();
-                func_Mail.mail();
+                //console.log("sendmail");
+                //func_Collect.datapic();
+                //func_Mail.mail();
             }); 
         });
     }

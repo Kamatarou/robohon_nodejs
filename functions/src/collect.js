@@ -19,7 +19,7 @@ var a = 1;
 var now = moment().unix();
 var starttime;
 
-exports.datapic = function(){
+exports.datapic = async function(){
  
   refsent.child('config').once('child_added',function(data) {
     starttime = data.val();
@@ -77,13 +77,13 @@ exports.datapic = function(){
         setTimeout(dboff,5000);
 };
 
-function initvalue(){
+async function initvalue(){
   mtext = "";
   mtime = "";
 }
 
 
-function stamp(){
+async function stamp(){
   
   refsent.child('config').set({timestamp:now});
   
@@ -91,11 +91,11 @@ function stamp(){
   
 };
 
-function dboff(){
+async function dboff(){
   stamp();
-  db.app.delete();
+  await db.app.delete();
   console.log('dboff');
-  process.exit(1);
+  //process.exit(1);
 }
 
 
