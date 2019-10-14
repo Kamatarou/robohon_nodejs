@@ -152,10 +152,12 @@ exports.RTDBSend_Params = async function(params,fkey){
   var ref = database.ref("dfLog/" + fkey + "/");
   var key = ref.key;
   var text = params.Response;
+  var intent = params.Intent;
   var outputContexts = params.outputContexts;
   //取得
   console.log("******************************");
   console.log("text->"+text);
+  console.log("Intent->" + intent);
   console.log("outputContexts->");
   Object.keys(outputContexts).forEach(function(key){
     console.log("key-->", key);
@@ -179,11 +181,15 @@ exports.RTDBSend_Params = async function(params,fkey){
   //末尾一文字削除して整形
   phrase = phrase.slice(0,-1);
   console.log("All Phrase->" + phrase);
+  var name = "";
+  var dpName = intent;
 
   //データセット
   var json = {
     firebasekey : key,
-    Phrase : phrase
+    Phrase : phrase,
+    name : name,
+    displayname : dpName
   };
 
   //接続
