@@ -2,6 +2,7 @@
 var admin = require('firebase-admin');
 
 var serviceAccount = require("../confidential/vik/chat001-16c14-firebase-adminsdk-yzgox-e0940b30ea.json");
+
 /*admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://chat001-16c14.firebaseio.com'
@@ -26,8 +27,8 @@ exports.datapic = async function(){
    console.log('starttime = '+starttime);
   
  
-  refsent.on('child_added',function(snapshot){
-       snapshot.forEach(function(data){
+  refsent.on('child_added',async function(snapshot){
+       snapshot.forEach(async function(data){
           key = data.key;
           value = data.val();
           score = snapshot.child('Score').val();
@@ -55,7 +56,7 @@ exports.datapic = async function(){
             
           }
           if(score < 0 && mtext !== "" && mtime !== ""){
-            refmin.push().set({score:mscore, text:mtext, time:mtime, searchtime:now} ,function(err){
+            await refmin.push().set({score:mscore, text:mtext, time:mtime, searchtime:now} ,function(err){
               if(err){
                 //接続失敗
                 console.error(err);

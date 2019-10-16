@@ -12,7 +12,7 @@ require('moment-timezone');
 //firebaseの初期化やら認証やら
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://chat001-16c14.firebaseio.com"
+  databaseURL: "https://chat001-16c14.firebaseio.com",
 });
 
 var database = admin.database();
@@ -55,10 +55,10 @@ exports.RTDBSender = async function(Txt,name){
   //識別名の受け取りが出来ていればスルー、出来てなかったり一致してない場合強制終了
   if(name){
     if(name === "Android"){
-      device = "Android(Server)";
+      device = "Android";
     }
     else if(name === "Bot"){
-      device = "Bot";
+      device = "ロボホン";
     }
     else{
       console.warn("no mutch indentify");
@@ -210,12 +210,43 @@ exports.RTDBSend_Fallback = async function(Intent){
   
 }
 
-exports.RTDBGetter = async function(){
+exports.RTDBGetter = async function(Colect,Mail){
   console.log("RTFB Getter is Now Working");
-  var ref = database.ref("sentiment/");
-  ref.on("child_added",function(snapshot, prevChildKey){
+  var ref = database.ref("dfLog/");
+  var mailref = database.ref("minus/");
+
+  //dfLogの監視
+  ref.on("child_added", function(snapshot){
     var post = snapshot.val();
-    /*console.log("post" + post);
-    console.log("prev" + prevChildKey);*/
+    //console.log(post);
+    //Colect.datapic();
+    /*Object.keys(post).forEach(function(key){
+        //console.log(key);
+    });*/
+  },function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
+  });
+
+  //minusの監視
+  mailref.on("child_added",function(snapshot) {
+    //Mail.mail();
+  },function(errorObject) {
+    console.log("The read failed: " + errorObject.code);
+  });
+} 
+
+/*async function GetterTest(){
+  console.log("Getter test is Now Working");
+  var ref = database.ref("dfLog/");
+  ref.on("value", function(snapshot){
+    var post = snapshot.val();
+    console.log(post);
+    Object.keys(post).forEach(function(key){
+        console.log(key);
+    });
+  },function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
   });
 }
+GetterTest();
+*/

@@ -33,21 +33,35 @@ var transporter = mailer.createTransport({
   });
   
 exports.mail = async function(){  
-  refstats.once('value',function(data){
+  refstats.once('value',async function(data){
      mailAddress = data.child('mailAddress').val();
      console.log(mailAddress);
      
-  refsent.child('config').on('child_added',function(data){
+  refsent.child('config').on('child_added',async function(data){
     targettime = data.val();
     console.log('targettime = '+targettime);
-   refmin.on('child_added',function(data){
+   refmin.once('child_added',async function(data){
      score = data.child('score').val();
      text = data.child('text').val();
      time = data.child('time').val();
      stime = data.child('searchtime').val();
      console.log(stime);
     if(stime == targettime){
-       send(mailAddress,score,text,time);
+       //send(mailAddress,score,text,time);
+       var mailset = {
+        from: senderMailAddress,
+        to: mailAddress,
+        subject: 'testmail',
+        text: score + ' ' + text + ' ' + time
+      };
+    
+      await transporter.sendMail(mailset,function(error,info){
+        if(error){
+         console.log(error);
+        }else{
+         console.log('Mail send' +info.response);
+        }
+      });
     }
     
    });
@@ -61,24 +75,11 @@ exports.mail = async function(){
 };
 
 async function send(mailAddress,score,text,time){
-  var mailset = {
-    from: senderMailAddress,
-    to: mailAddress,
-    subject: 'testmail',
-    text: score + ' ' + text + ' ' + time
-  };
-
-  await transporter.sendMail(mailset,function(error,info){
-      if(error){
-        console.log(error);
-       }else{
-        console.log('Mail send' +info.response);
-       }
-     });
+  
 };
 
-async function dboff(){
-  await db.app.delete();
+function dboff(){
+  db.app.delete();
   console.log('dboff');
   //process.exit(1);
 };

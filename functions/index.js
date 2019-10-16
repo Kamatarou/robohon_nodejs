@@ -39,8 +39,6 @@ const func_NaturalLang = require('./src/func_NaturalLang.js');
 const func_Collect = require('./src/collect.js');
 //集計結果をメールに送りつける関数の読み取り
 const func_Mail = require('./src/mail.js');
-//定期実行をする関数の読み取り
-const func_Monitor = require('./src/func_Monitor.js');
 
 /******************
  * 
@@ -50,18 +48,22 @@ const func_Monitor = require('./src/func_Monitor.js');
 
 //関数が読めたときにゲッター関数常駐(?)
 if(func_Firebase){
-    func_Firebase.RTDBGetter();
+    func_Firebase.RTDBGetter(func_Collect,func_Mail);
 }
 
 //関数が読めたときに定期的にコレクト＆メール処理を行う関数
 /*if(func_Monitor){
     if(func_Collect && func_Mail){
         //interval = 1000 * 60 * 60;
-        console.log("Monitor");
         var interval = 1000;
-        //func_Monitor.monitorMail(interval);
+        func_Monitor.monitorMail(interval);
+        
     }
 }*/
+
+/*app.get('',(request,response) => {
+
+})*/
 
 //お試しレスポンス１
 app.get('/timestamp', (request, response) => {
@@ -157,11 +159,10 @@ app.get('/api/v1/p7/testapi', (request, response) =>{
 
 //お試しAPI8
 app.get('/api/v1/p8/testapi', (request, response) =>{
-    func_Collect.datapic();
+    //func_Collect.datapic();
     func_Mail.mail();
 
-    response.status(200).send();
-    
+    //response.status(200).send();
 });
 
 /**

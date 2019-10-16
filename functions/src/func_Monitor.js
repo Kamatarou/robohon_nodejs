@@ -1,5 +1,15 @@
-exports.monitorMail = async function(interval){
-    setInterval(async()=> {
+/*exports.monitorMail = async function(interval){
+    console.log(interval);
+    const si = await setInterval(()=>{
         console.log("gofe");
-    }, interval);
+    },interval);
 }
+
+async function intertest(t) {
+    const si = await setInterval(()=>{
+        console.log("intertest");
+        console.log("aaaa");
+    },t);
+}
+
+//intertest(3000);*/
