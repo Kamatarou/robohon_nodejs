@@ -15,7 +15,14 @@ admin.initializeApp({
   databaseURL: "https://chat001-16c14.firebaseio.com",
 });
 
+const app2 = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://chat001-16c14-a23ae.firebaseio.com"
+})
+
 var database = admin.database();
+
+var db2 = admin.database(app2);
 
 //どのタイミングで来たか識別する文字列
 var device = "";
@@ -234,6 +241,11 @@ exports.RTDBGetter = async function(Colect,Mail){
     console.log("The read failed: " + errorObject.code);
   });
 } 
+
+async function IntentSeparator(intent){
+  if(!intent){ return }
+
+}
 
 /*async function GetterTest(){
   console.log("Getter test is Now Working");

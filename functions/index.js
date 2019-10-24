@@ -165,6 +165,21 @@ app.get('/api/v1/p8/testapi', (request, response) =>{
     //response.status(200).send();
 });
 
+//お試しAPI9
+app.get('/api/v1/p9/testapi', (request, response) =>{
+    var word = request.query.s;
+    var fkey = "0000000000000001";
+    if(!global.g_fkey){
+        global.g_fkey = fkey;
+        global.g_timerId = setTimeout("clear_g_timeId", 1000 * 60 * 5);
+    }
+    func_dialogflowAPI.get_Intent(word).then(value =>{
+        func_Firebase.RTDBSend_Params(value,fkey).then(v =>{
+            response.send(value);
+        });
+    });
+});
+
 /**
  * 本番API
  **/
@@ -194,6 +209,8 @@ app.get('/api/v1/hubapi',(require,response)=>{
         response.status(500).json(json_E);
     }
 });
+
+async function clear_g_timeId(){}
 
 //他所のディレクトリ下にあるindex.jsファイルを引っ張ってきてuseでつかるように
 //var router = require('./route/v1/');
