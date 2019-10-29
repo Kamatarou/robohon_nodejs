@@ -10,7 +10,7 @@ var moment = require('moment');
 require('moment-timezone');
 
 //firebaseの初期化やら認証やら
-admin.initializeApp({
+const app = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://chat001-16c14.firebaseio.com",
 });
@@ -18,9 +18,9 @@ admin.initializeApp({
 const app2 = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://chat001-16c14-a23ae.firebaseio.com"
-})
+},"app2");
 
-var database = admin.database();
+var database = admin.database(app);
 
 var db2 = admin.database(app2);
 
@@ -146,71 +146,111 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
   });
 }
 
-exports.RTDBSend_Params = async function(params,fkey){
+exports.RTDBSend_Params = async function(params,fkey,face){
   if(!params){
     return;
+  }
+  if(!face){
+    var Face = "0";
+  }
+  else{
+    var Face = face;
   }
   if(!params.end_conversation){
     //会話が終わってない場合
     console.log("No End to conversation");
-    return;
-  }
-  var phrase = "";
-  var ref = database.ref("dfLog/" + fkey + "/");
-  var key = ref.key;
-  var text = params.Response;
-  var intent = params.Intent;
-  var outputContexts = params.outputContexts;
-  //取得
-  console.log("******************************");
-  console.log("text->"+text);
-  console.log("Intent->" + intent);
-  console.log("outputContexts->");
-  Object.keys(outputContexts).forEach(function(key){
-    console.log("key-->", key);
-    var field = outputContexts[key].parameters.fields;
-    if(field){
+    console.log("Firebasekey " + fkey);
+    Object.keys(params.parameters.fields).forEach(function(key){
+      console.log("KEY:" + key);
+      let field = params.parameters.fields[key];
       Object.keys(field).forEach(function(key){
-        if(key.indexOf(".original") == -1){
-          console.log(key," : ",field[key]);
-           if(field[key].stringValue){
-            phrase += field[key].stringValue;
-            phrase += ",";
-          }
-          if(field[key].numberValue){
-            phrase += field[key].numberValue;
-            phrase += ",";
-          }
-        }
+        console.log("key->" + key + " : value-> " + field[key]);
       });
+    });
+    console.log("Intent ->" + params.Intent);
+    if(params.Intent.indexOf("morning") > -1){
+      global.g_Intent = "morning";
     }
-  });
-  //末尾一文字削除して整形
-  phrase = phrase.slice(0,-1);
-  console.log("All Phrase->" + phrase);
-  var name = "";
-  var dpName = intent;
-
-  //データセット
-  var json = {
-    firebasekey : key,
-    Phrase : phrase,
-    name : name,
-    displayname : dpName
-  };
-
-  //接続
-  await ref.set(json , function(err){
-    if(err){
-      //接続失敗
-      console.error(err);
+    else if(params.Intent.indexOf("good_night") > -1){
+      global.g_Intent = "atnight";
+    }
+    else if(params.Intent.indexOf("Welcome_back") > -1){
+      global.g_Intent = "welcomeback"
     }
     else{
-      //接続成功
-      console.log("Success Send *Params*");
-      //console.log("send Data-> " + json);
+      return;
     }
-  });
+    var RootRobo = 00000000
+    console.log("RootRobo(AndroidID) ->" + RootRobo);
+    console.log("Face ->" + Face);
+    console.log("Intent ->"+ global.g_Intent);
+
+    let json ={
+      
+    }
+
+    return;
+  }
+  else{
+    //会話が終わっている場合
+    var phrase = "";
+    var ref = database.ref("dfLog/" + fkey + "/");
+    var key = ref.key;
+    var text = params.Response;
+    var intent = params.Intent;
+    var outputContexts = params.outputContexts;
+    //取得
+    console.log("******************************");
+    console.log("text->"+text);
+    console.log("Intent->" + intent);
+    console.log("outputContexts->");
+    Object.keys(outputContexts).forEach(function(key){
+      console.log("key-->", key);
+      var field = outputContexts[key].parameters.fields;
+      if(field){
+        Object.keys(field).forEach(function(key){
+         if(key.indexOf(".original") == -1){
+           console.log(key," : ",field[key]);
+            if(field[key].stringValue){
+             phrase += field[key].stringValue;
+             phrase += ",";
+           }
+           if(field[key].numberValue){
+             phrase += field[key].numberValue;
+             phrase += ",";
+           }
+         }
+        });
+      }
+    });
+  
+    //末尾一文字削除して整形
+    phrase = phrase.slice(0,-1);
+    console.log("All Phrase->" + phrase);
+    var name = "";
+    var dpName = intent;
+
+    //データセット
+    var json = {
+      firebasekey : key,
+      Phrase : phrase,
+      name : name,
+      displayname : dpName
+    };
+
+    //接続
+    await ref.set(json , function(err){
+      if(err){
+        //接続失敗
+        console.error(err);
+      }
+      else{
+        //接続成功
+        console.log("Success Send *Params*");
+        //console.log("send Data-> " + json);
+      }
+    });
+  }
 }
 
 exports.RTDBSend_Fallback = async function(Intent){

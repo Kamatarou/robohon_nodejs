@@ -27,7 +27,7 @@ exports.get_Intent = async function(Txt){
           console.log("text->" + Txt);
         }
         else{
-          var err = {Result : "NG", Message:"Don't Get Texts"};
+          var err = {Result : "NG", Message:"Not get texts"};
           return err;
         }
 
@@ -64,8 +64,8 @@ exports.get_Intent = async function(Txt){
             Response : result.fulfillmentText, 
             Intent : result.intent.displayName, 
             end_conversation : EndFlg,
-            Propaty : result.parameters,
-            outputContexts : result.outputContexts
+            outputContexts : result.outputContexts,
+            parameters : result.parameters,
           };
         } else {
           console.log(`  No intent matched.`);

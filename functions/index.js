@@ -160,21 +160,27 @@ app.get('/api/v1/p7/testapi', (request, response) =>{
 //お試しAPI8
 app.get('/api/v1/p8/testapi', (request, response) =>{
     //func_Collect.datapic();
-    func_Mail.mail();
-
+    //func_Mail.mail();
     //response.status(200).send();
 });
 
 //お試しAPI9
 app.get('/api/v1/p9/testapi', (request, response) =>{
     var word = request.query.s;
+    let face = request.query.f;
     var fkey = "0000000000000001";
     if(!global.g_fkey){
         global.g_fkey = fkey;
-        global.g_timerId = setTimeout("clear_g_timeId", 1000 * 60 * 5);
+        console.log("gFkey ->" + global.g_fkey);
+        global.g_timerId = setTimeout(async function(){
+            global.g_fkey = "";
+            global.g_timerId = "";
+            global.g_Intent = "";
+            await console.log("cleared");
+        }, 1000 * 60);
     }
     func_dialogflowAPI.get_Intent(word).then(value =>{
-        func_Firebase.RTDBSend_Params(value,fkey).then(v =>{
+        func_Firebase.RTDBSend_Params(value,global.g_fkey,face).then(v =>{
             response.send(value);
         });
     });
@@ -194,7 +200,7 @@ app.get('/api/v1/hubapi',(require,response)=>{
             var json_R = value;
             func_Firebase.RTDBSend_Params(json_R,fkey);
             func_NaturalLang.get_Sentiment(sentence).then(result =>{
-                console.log("fkey->"+fkey);
+                //console.log("fkey->"+fkey);
                 func_Firebase.RTDBSend_Sentiment(result,fkey);
                 func_Firebase.RTDBSender(json_R.Response,"Bot");
                 response.status(200).json(json_R);
@@ -210,7 +216,9 @@ app.get('/api/v1/hubapi',(require,response)=>{
     }
 });
 
-async function clear_g_timeId(){}
+async function clear_g_timeId(){
+    
+}
 
 //他所のディレクトリ下にあるindex.jsファイルを引っ張ってきてuseでつかるように
 //var router = require('./route/v1/');
