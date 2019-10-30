@@ -168,23 +168,26 @@ exports.RTDBSend_Params = async function(params,fkey,face){
       });
     });
     console.log("Intent ->" + params.Intent);
+    let Intent = "";
     if(params.Intent.indexOf("morning") > -1){
-      global.g_Intent = "morning";
+      Intent = "morning";
     }
     else if(params.Intent.indexOf("good_night") > -1){
-      global.g_Intent = "atnight";
+      Intent = "atnight";
     }
     else if(params.Intent.indexOf("Welcome_back") > -1){
-      global.g_Intent = "welcomeback"
+      Intent = "welcomeback"
     }
     else{
+      console.log("no match intent");
       return;
     }
-    var RootRobo = 00000000
+    let RootRobo = 00000000;
     console.log("RootRobo(AndroidID) ->" + RootRobo);
     console.log("Face ->" + Face);
-    console.log("Intent ->"+ global.g_Intent);
-
+    console.log("Intent ->"+ Intent);
+    console.log("Now..." + "param"+g_count);
+    global.g_count = global.g_count + 1;
     let json ={
       
     }

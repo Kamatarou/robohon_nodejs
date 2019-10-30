@@ -170,15 +170,12 @@ app.get('/api/v1/p9/testapi', (request, response) =>{
     let face = request.query.f;
     var fkey = "0000000000000001";
     if(!global.g_fkey){
+        global.g_count = 0;
         global.g_fkey = fkey;
-        console.log("gFkey ->" + global.g_fkey);
-        global.g_timerId = setTimeout(async function(){
-            global.g_fkey = "";
-            global.g_timerId = "";
-            global.g_Intent = "";
-            await console.log("cleared");
-        }, 1000 * 60);
+        console.log("Set GlobalVariable");
+        global.g_timerId = setTimeout(clear_globalVar , 1000 * 60);
     }
+    console.log("gFkey ->" + global.g_fkey);
     func_dialogflowAPI.get_Intent(word).then(value =>{
         func_Firebase.RTDBSend_Params(value,global.g_fkey,face).then(v =>{
             response.send(value);
@@ -216,8 +213,11 @@ app.get('/api/v1/hubapi',(require,response)=>{
     }
 });
 
-async function clear_g_timeId(){
-    
+async function clear_globalVar(){
+    global.g_fkey = null;
+    global.g_timerId = null;
+    global.g_count = 0;
+    console.log("****cleared*****");
 }
 
 //他所のディレクトリ下にあるindex.jsファイルを引っ張ってきてuseでつかるように
