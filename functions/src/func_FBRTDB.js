@@ -118,7 +118,7 @@ exports.RTDBSend_Sentiment = async function(Sentiment,fkey){
   var RawTxt = Sentiment.Text;
   var docScore = Sentiment.score;
   var docMag = Sentiment.magnitude;
-  var time = moment().tz("Asia/Tokyo").format("YYYY/MM/DD,HH:mm:ss");
+  var time = moment().tz("Asia/Tokyo").format("YYYY-MM-DD,HH:mm:ss");
   var timestamp = moment().unix();
   console.log("time ->"+time);
   console.log("RawTxt->"+RawTxt);
@@ -156,17 +156,34 @@ exports.RTDBSend_Params = async function(params,fkey,face){
   else{
     var Face = face;
   }
+  let cntref = db2.ref("00000000/stats/count/");
+  var g_count;
+  if(!(params.Intent.indexOf("Default Fallback Intent") > -1)){
+    await cntref.once("value",async function(snapshot){
+      g_count = snapshot.val();
+      await cntref.set(++g_count);
+    },function (err) {
+      console.warn("count get error");
+      console.warn(err);
+      return
+    });
+  }
+  
   if(!params.end_conversation){
     //会話が終わってない場合
     console.log("No End to conversation");
-    console.log("Firebasekey " + fkey);
+    console.log("Firebasekey :" + fkey);
+
+    let pary = [];
     Object.keys(params.parameters.fields).forEach(function(key){
       console.log("KEY:" + key);
       let field = params.parameters.fields[key];
       Object.keys(field).forEach(function(key){
         console.log("key->" + key + " : value-> " + field[key]);
+        pary.push(field[key]);
       });
     });
+
     console.log("Intent ->" + params.Intent);
     let Intent = "";
     if(params.Intent.indexOf("morning") > -1){
@@ -182,15 +199,31 @@ exports.RTDBSend_Params = async function(params,fkey,face){
       console.log("no match intent");
       return;
     }
-    let RootRobo = 00000000;
+
+    let RootRobo = "00000000";
     console.log("RootRobo(AndroidID) ->" + RootRobo);
     console.log("Face ->" + Face);
     console.log("Intent ->"+ Intent);
-    console.log("Now..." + "param"+g_count);
-    global.g_count = global.g_count + 1;
+    console.log("Now..." + "param"+ g_count);
+    console.log("pary->" + pary[0]);
+    
+    let pnum = "param" + g_count;
+    let time = moment().tz("Asia/Tokyo").format("MM-DD,HH:mm");
+
+    let ref = db2.ref(RootRobo + "/" + Intent +"/" + "dabcdefgh/");
     let json ={
-      
-    }
+        [pnum]: pary[0],
+        time : time
+    };
+    
+    ref.update(json, function(err){
+      if(err){
+        console.warn(err);
+      }
+      else{
+        console.log("success send *Params*");
+      }
+    });
 
     return;
   }
@@ -249,10 +282,11 @@ exports.RTDBSend_Params = async function(params,fkey,face){
       }
       else{
         //接続成功
-        console.log("Success Send *Params*");
+        console.log("Success Send *End_conv*");
         //console.log("send Data-> " + json);
       }
     });
+    await cntref.set(0);
   }
 }
 
@@ -260,14 +294,15 @@ exports.RTDBSend_Fallback = async function(Intent){
   
 }
 
-exports.RTDBGetter = async function(Colect,Mail){
+exports.RTDBGetter = async function(){
   console.log("RTFB Getter is Now Working");
   var ref = database.ref("dfLog/");
   var mailref = database.ref("minus/");
+  let cntref = db2.ref("00000000/stats/count/");
 
   //dfLogの監視
   ref.on("child_added", function(snapshot){
-    var post = snapshot.val();
+    //var post = snapshot.val();
     //console.log(post);
     //Colect.datapic();
     /*Object.keys(post).forEach(function(key){
@@ -283,25 +318,33 @@ exports.RTDBGetter = async function(Colect,Mail){
   },function(errorObject) {
     console.log("The read failed: " + errorObject.code);
   });
+
+  //DB2のcount監視
+  cntref.on("value", async function(snapshot){
+    //console.log(snapshot.val());
+    let timestamp = moment().unix();
+    let ref = db2.ref("00000000/stats/");
+    //let time = moment(timestamp * 1000).tz("Asia/Tokyo").format("MM-DD,HH:mm");
+    //console.log("time unix" + time);
+    await console.log("count ->" + snapshot.val());
+    if(snapshot.val() == 0){
+      console.log("no functions");
+    }
+    else{
+      setTimeout(()=>{
+        console.log("reset count");
+        ref.update({count : 0});
+      },1000 * 60 * 10);
+      console.log("set timestamp");
+      await ref.update({timestamp:timestamp});
+    }
+  },function(errorObject) {
+    console.log("The read failed: " + errorObject.code);
+  });
+  
 } 
 
 async function IntentSeparator(intent){
   if(!intent){ return }
 
 }
-
-/*async function GetterTest(){
-  console.log("Getter test is Now Working");
-  var ref = database.ref("dfLog/");
-  ref.on("value", function(snapshot){
-    var post = snapshot.val();
-    console.log(post);
-    Object.keys(post).forEach(function(key){
-        console.log(key);
-    });
-  },function (errorObject) {
-    console.log("The read failed: " + errorObject.code);
-  });
-}
-GetterTest();
-*/
