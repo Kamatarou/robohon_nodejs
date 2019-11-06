@@ -180,7 +180,9 @@ exports.RTDBSend_Params = async function(params,fkey,face){
       let field = params.parameters.fields[key];
       Object.keys(field).forEach(function(key){
         console.log("key->" + key + " : value-> " + field[key]);
-        pary.push(field[key]);
+        if(field[key] && !(key.indexOf("kind") > -1)){
+          pary.push(field[key]);
+        }
       });
     });
 
@@ -212,8 +214,8 @@ exports.RTDBSend_Params = async function(params,fkey,face){
 
     let ref = db2.ref(RootRobo + "/" + Intent +"/" + "dabcdefgh/");
     let json ={
-        [pnum]: pary[0],
-        time : time
+      [pnum]: pary[0],
+      time : time
     };
     
     ref.update(json, function(err){
