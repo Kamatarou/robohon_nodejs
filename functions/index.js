@@ -39,6 +39,12 @@ const func_NaturalLang = require('./src/func_NaturalLang.js');
 const func_Collect = require('./src/collect.js');
 //集計結果をメールに送りつける関数の読み取り
 const func_Mail = require('./src/mail.js');
+//ネガ要素を監視したり伝言の監視をする関数の読み取り
+const func_negsearch = require('./src/negsearch.js');
+//メールを送りつける関数の読み取り
+const func_Mails = require('./src/mail_s.js');
+//とりあえずメッセージ送る関数
+//const func_msgtsuti = require('./src/msgtsuti');
 
 /******************
  * 
@@ -49,6 +55,10 @@ const func_Mail = require('./src/mail.js');
 //関数が読めたときにゲッター関数常駐(?)
 if(func_Firebase){
     func_Firebase.RTDBGetter();
+}
+
+if(func_negsearch){
+    func_negsearch.startserch();    
 }
 
 //関数が読めたときに定期的にコレクト＆メール処理を行う関数
@@ -159,9 +169,7 @@ app.get('/api/v1/p7/testapi', (request, response) =>{
 
 //お試しAPI8
 app.get('/api/v1/p8/testapi', (request, response) =>{
-    //func_Collect.datapic();
-    //func_Mail.mail();
-    //response.status(200).send();
+    
 });
 
 //お試しAPI9
