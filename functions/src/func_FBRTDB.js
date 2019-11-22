@@ -301,6 +301,7 @@ exports.RTDBGetter = async function(){
   var ref = database.ref("dfLog/");
   var mailref = database.ref("minus/");
   let cntref = db2.ref("00000000/stats/count/");
+  let noticeref = database.ref("chat/");
 
   //dfLogの監視
   ref.on("child_added", function(snapshot){
@@ -344,6 +345,18 @@ exports.RTDBGetter = async function(){
     console.log("The read failed: " + errorObject.code);
   });
   
+  noticeref.on("child_added", async function(snapshot){
+    await console.log("Get Value ->" + snapshot.val());
+    let refconv = database.ref("stats/isConv");
+    let isConv = refconv.val();
+    console.log("isConv ->" + isConv);
+    subject = "ヘルパーロボホンからのお知らせ";
+    text = "ロボホンが会話を始めています\n確認する場合は下記のURLからアクセスしてください\n\n https://chat001-16c14.firebaseapp.com/D_chatrobo.html";
+    
+  },function(errorObject){
+    console.log("The read failed: " + errorObject.code);
+  });
+
 } 
 
 async function IntentSeparator(intent){
