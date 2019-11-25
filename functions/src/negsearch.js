@@ -14,7 +14,11 @@ var db = admin.database(app3);
 var refmsg = db.ref('msgboard');
 var refsent = db.ref('sentiment');
 var refstats = db.ref('stats');
+var refmin = db.ref('minus');
 var startTime;
+var score;
+var stext;
+var stime;
 
 
 function negserch(){
@@ -36,16 +40,21 @@ function negserch(){
       console.log("stext->"+stext);
       console.log("stime->"+sdtime);
       if(score<-0.7){
+        setMinusData(score,stext,stime);
         subject = "ヘルパーロボホンからの警告";
         text = "気分が落ち込んでいる可能性があります。\n様子を見てあげましょう。\n\n発言内容：" + stext + "\n発言日時：" + sdtime;
         console.log("mailtext->" + text);
         mailer(subject,text);
       }
       else if(score<-0.4){
+        setMinusData(score,stext,stime);
         subject = "ヘルパーロボホンからの警告";
         text = "少し調子がよくないかもしれません。\n\n発言内容：" + stext + "\n発言日時：" + sdtime;
         console.log("mailtext->" + text);
         mailer(subject,text);
+      }
+      else if(score<0){
+        setMinusData(score,stext,stime);
       }
       setConfTime(stimestamp);
     }
@@ -94,6 +103,10 @@ function mailer(subject,text){
 function setConfTime(stimestamp){
   refsent.child('config').set({timest:stimestamp});
   console.log("timestamp set");
+}
+
+function setMinusData(score,stext,stime){
+  refmin.push().set({score:score, text:stext, time:stime});
 }
 
 exports.startserch = function(){
