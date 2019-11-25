@@ -347,9 +347,23 @@ exports.RTDBGetter = async function(){
   
   noticeref.on("child_added", async function(snapshot){
     await console.log("Get Value ->" + snapshot.val());
-    let refconv = database.ref("stats/isConv");
-    let isConv = refconv.val();
-    console.log("isConv ->" + isConv);
+    let refconv = database.ref("stats/isConv/");
+    let isConv;
+    await refconv.once("value" , async function(sp){
+      isConv = sp.val();
+      console.log("isConv ->" + isConv);
+      if(isConv == false){
+        refconv.update({isConv:true});
+        console.log("it's Trueth conversation");
+        setTimeout(()=>{
+          refconv.update({isConv:false});
+          console.log("No Activity the conversation");
+        },1000 * 60 * 1.5);
+      }
+      else{
+        console.log("it's now conversation");
+      }
+    });
     subject = "ヘルパーロボホンからのお知らせ";
     text = "ロボホンが会話を始めています\n確認する場合は下記のURLからアクセスしてください\n\n https://chat001-16c14.firebaseapp.com/D_chatrobo.html";
     
