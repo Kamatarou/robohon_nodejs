@@ -8,6 +8,7 @@ var admin = require('firebase-admin');
 var serviceAccount = require("../confidential/vik/chat001-16c14-firebase-adminsdk-yzgox-e0940b30ea.json");
 var moment = require('moment');
 require('moment-timezone');
+var mail_rtdb;
 
 //firebaseの初期化やら認証やら
 const app = admin.initializeApp({
@@ -302,6 +303,12 @@ exports.RTDBGetter = async function(){
   var mailref = database.ref("minus/");
   let cntref = db2.ref("00000000/stats/count/");
   let noticeref = database.ref("chat/");
+  setTimeout(() => {
+    //サーバー起動直後のファイアーストーム対策
+    mail_rtdb = require('./mail_s.js');
+    console.log("mail function is available");
+  }, 1000 * 20);
+
 
   //dfLogの監視
   ref.on("child_added", function(snapshot){
@@ -345,27 +352,49 @@ exports.RTDBGetter = async function(){
     console.log("The read failed: " + errorObject.code);
   });
   
+  //会話状態の監視
   noticeref.on("child_added", async function(snapshot){
     await console.log("Get Value ->" + snapshot.val());
     let refconv = database.ref("stats/isConv/");
     let isConv;
+    let refstats = database.ref('stats/mailAddress/');
+    let mailAddress;
+    let subject = "ヘルパーロボホンからのお知らせ";
+    let maintext = "ロボホンが会話を始めています\n確認する場合は下記のURLからアクセスしてください\n\n https://chat001-16c14.firebaseapp.com/D_chatrobo.html";
+    //状態の変更
     await refconv.once("value" , async function(sp){
       isConv = sp.val();
       console.log("isConv ->" + isConv);
-      if(isConv == false){
-        refconv.update({isConv:true});
-        console.log("it's Trueth conversation");
-        setTimeout(()=>{
-          refconv.update({isConv:false});
-          console.log("No Activity the conversation");
-        },1000 * 60 * 1.5);
-      }
-      else{
-        console.log("it's now conversation");
+      //メールアドレスの取得
+      await refstats.once("value" , async function(sp){
+        mailAddress = sp.val();
+        //console.log("mail : "+ mailAddress);
+      });
+      if(mail_rtdb){
+        if(!isConv){
+          if(mailAddress){
+            //メールアドレスを取得できた場合
+            //最初の会話が始まったらメールで通知
+            await mail_rtdb.send(mailAddress,subject,maintext);
+            //フラグを変更し、タイマー処理をセット
+            await refconv.set(true);
+            console.log("it's Trueth conversation");
+            setTimeout(()=>{
+              //フラグを戻す処理
+              refconv.set(false);
+              console.log("No Activity the conversation");
+            },1000 * 60 * 10);
+          }
+          else{
+            //メールアドレスを取得出来ない場合
+            console.warn("Can't get mailAddress");
+          }
+        }
+        else{
+          console.log("already conversation");
+        }
       }
     });
-    subject = "ヘルパーロボホンからのお知らせ";
-    text = "ロボホンが会話を始めています\n確認する場合は下記のURLからアクセスしてください\n\n https://chat001-16c14.firebaseapp.com/D_chatrobo.html";
     
   },function(errorObject){
     console.log("The read failed: " + errorObject.code);
