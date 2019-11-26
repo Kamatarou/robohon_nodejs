@@ -35,7 +35,7 @@ function negserch(){
       score = data.val().Score;
       stext = data.val().Text;
       stime = data.val().time;
-      sdtime = moment(stime).format("MM/DD HH:mm");
+      sdtime = moment(stime, "MM/DD HH:mm");
       console.log("score->"+score);
       console.log("stext->"+stext);
       console.log("stime->"+sdtime);
@@ -72,7 +72,6 @@ function msg_sayjudg(){
     console.log("message->" + message);
     console.log("name->" + name);
     console.log("time->" + time);
-
     listentime = moment().tz("Asia/Tokyo").format("MM/DD HH:mm");
     subject = "ヘルパーロボホンからのお知らせ";
     text = "ロボホンが伝言を伝えました！\n\n時間：" + listentime + "\n伝言内容：" + message;
