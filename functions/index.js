@@ -35,14 +35,12 @@ const func_dialogflowAPI = require('./src/func_dialogflow.js');
 const func_Firebase = require('./src/func_FBRTDB.js');
 //NaturalLanguage周りの受け渡しを行う関数の読み取り
 const func_NaturalLang = require('./src/func_NaturalLang.js');
-//NaturalLanguageの結果の集計を行う関数の読み取り
-const func_Collect = require('./src/collect.js');
-//集計結果をメールに送りつける関数の読み取り
-const func_Mail = require('./src/mail.js');
 //ネガ要素を監視したり伝言の監視をする関数の読み取り
 const func_negsearch = require('./src/negsearch.js');
 //メールを送りつける関数の読み取り
 const func_Mails = require('./src/mail_s.js');
+//NaturalLanguageの結果の集計を行う関数の読み取り
+const func_Collects = require('./src/collect_s.js');
 //とりあえずメッセージ送る関数
 //const func_msgtsuti = require('./src/msgtsuti');
 
