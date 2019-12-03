@@ -203,17 +203,20 @@ exports.RTDBSend_Params = async function(params,fkey,face){
       return;
     }
 
+    if(!pary){
+      pary.push("none");
+    }
     let RootRobo = "00000000";
     console.log("RootRobo(AndroidID) ->" + RootRobo);
     console.log("Face ->" + Face);
     console.log("Intent ->"+ Intent);
     console.log("Now..." + "param"+ g_count);
     console.log("pary->" + pary[0]);
-    
+
     let pnum = "param" + g_count;
     let time = moment().tz("Asia/Tokyo").format("MM-DD,HH:mm");
 
-    let ref = db2.ref(RootRobo + "/" + Intent +"/" + "dabcdefgh/");
+    let ref = db2.ref(RootRobo + "/" + Intent +"/" + "NowInfo/");
     let json ={
       [pnum]: pary[0],
       time : time
