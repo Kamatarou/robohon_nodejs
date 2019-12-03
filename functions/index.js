@@ -59,20 +59,6 @@ if(func_negsearch){
     func_negsearch.startserch();    
 }
 
-//関数が読めたときに定期的にコレクト＆メール処理を行う関数
-/*if(func_Monitor){
-    if(func_Collect && func_Mail){
-        //interval = 1000 * 60 * 60;
-        var interval = 1000;
-        func_Monitor.monitorMail(interval);
-        
-    }
-}*/
-
-/*app.get('',(request,response) => {
-
-})*/
-
 //お試しレスポンス１
 app.get('/timestamp', (request, response) => {
   response.send(`${Date.now()}`);
@@ -196,13 +182,9 @@ app.get('/api/v1/hubapi',(require,response)=>{
             var json_R = value;
             func_Firebase.RTDBSend_Params(json_R,fkey);
             func_NaturalLang.get_Sentiment(sentence).then(result =>{
-                //console.log("fkey->"+fkey);
                 func_Firebase.RTDBSend_Sentiment(result,fkey);
                 func_Firebase.RTDBSender(json_R.Response,"Bot");
                 response.status(200).json(json_R);
-                //console.log("sendmail");
-                //func_Collect.datapic();
-                //func_Mail.mail();
             }); 
         });
     }
