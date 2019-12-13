@@ -53,6 +53,7 @@ const func_Collects = require('./src/collect_s.js');
 //関数が読めたときにゲッター関数常駐(?)
 if(func_Firebase){
     func_Firebase.RTDBGetter();
+    func_Firebase.RTDBCleanup();
 }
 
 if(func_negsearch){

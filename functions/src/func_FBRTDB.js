@@ -7,6 +7,7 @@
 var admin = require('firebase-admin');
 var serviceAccount = require("../confidential/vik/chat001-16c14-firebase-adminsdk-yzgox-e0940b30ea.json");
 var moment = require('moment');
+const cron = require('node-cron');
 require('moment-timezone');
 var mail_rtdb;
 
@@ -409,8 +410,12 @@ exports.RTDBGetter = async function(){
   },function(errorObject){
     console.log("The read failed: " + errorObject.code);
   });
-
 } 
+
+exports.RTDBCleanup = async function(){
+  console.log("cleanup");
+  cron.schedule('0-30 * * * * *', () => console.log('実行'));
+}
 
 async function IntentSeparator(intent){
   if(!intent){ return }
