@@ -170,73 +170,78 @@ exports.RTDBSend_Params = async function(params,fkey,face){
     });
   }
   
-  if(!params.end_conversation){
-    //会話が終わってない場合
-    console.log("No End to conversation");
-    console.log("Firebasekey :" + fkey);
-
-    let pary = [];
-    Object.keys(params.parameters.fields).forEach(function(key){
-      console.log("KEY:" + key);
-      let field = params.parameters.fields[key];
-      Object.keys(field).forEach(function(key){
-        console.log("key->" + key + " : value-> " + field[key]);
-        if(field[key] && !(key.indexOf("kind") > -1)){
-          pary.push(field[key]);
+  let pary = [];
+  Object.keys(params.parameters.fields).forEach(function(key){
+    console.log("KEY:" + key);
+    let field = params.parameters.fields[key];
+    Object.keys(field).forEach(function(key){
+      console.log("key->" + key + " : value-> " + field[key]);
+      if(field[key] && !(key.indexOf("kind") > -1)){
+        if((key === "replyYes" || key === "replyNo") && !field[key]){
+          console.log("empty");
+          if(key === "replyYes"){
+            pary.push("肯定");
+          }
+          if(key === "replyNo"){
+            pary.push("否定");
+          }
         }
-      });
-    });
-
-    console.log("Intent ->" + params.Intent);
-    let Intent = "";
-    if(params.Intent.indexOf("morning") > -1){
-      Intent = "morning";
-    }
-    else if(params.Intent.indexOf("good_night") > -1){
-      Intent = "atnight";
-    }
-    else if(params.Intent.indexOf("Welcome_back") > -1){
-      Intent = "welcomeback"
-    }
-    else{
-      console.log("no match intent");
-      return;
-    }
-
-    if(!pary){
-      pary.push("none");
-    }
-    let RootRobo = "00000000";
-    console.log("RootRobo(AndroidID) ->" + RootRobo);
-    console.log("Face ->" + Face);
-    console.log("Intent ->"+ Intent);
-    console.log("Now..." + "param"+ g_count);
-    console.log("pary->" + pary[0]);
-
-    let pnum = "param" + g_count;
-    let time = moment().tz("Asia/Tokyo").format("MM-DD,HH:mm");
-
-    let ref = db2.ref(RootRobo + "/" + Intent +"/" + "NowInfo/");
-    let json ={
-      [pnum]: pary[0],
-      time : time
-    };
-    
-    ref.update(json, function(err){
-      if(err){
-        console.warn(err);
-      }
-      else{
-        console.log("success send *Params*");
+        pary.push(field[key]);
       }
     });
+  });
 
-    return;
+  console.log("Intent ->" + params.Intent);
+  let Intent = "";
+  if(params.Intent.indexOf("morning") > -1){
+    Intent = "morning";
+  }
+  else if(params.Intent.indexOf("good_night") > -1){
+    Intent = "atnight";
+  }
+  else if(params.Intent.indexOf("Welcome_back") > -1){
+    Intent = "welcomeback"
   }
   else{
+    console.log("no match intent");
+    await cntref.set(0);
+    return;
+  }
+
+  if(!pary){
+    pary.push("none");
+  }
+  let RootRobo = "00000000";
+  console.log("RootRobo(AndroidID) ->" + RootRobo);
+  console.log("Face ->" + Face);
+  console.log("Intent ->"+ Intent);
+  console.log("Now..." + "param"+ g_count);
+  console.log("pary->" + pary[0]);
+
+  let pnum = "param" + g_count;
+  let time = moment().tz("Asia/Tokyo").format("MM-DD,HH:mm");
+
+  let ref = db2.ref(RootRobo + "/" + Intent +"/" + "NowInfo/");
+  let json ={
+    [pnum]: pary[0],
+    time : time
+  };
+    
+  ref.update(json, function(err){
+    if(err){
+      console.warn(err);
+    }
+    else{
+      console.log("success send *Params*");
+    }
+  });
+
+  if(params.end_conversation){
     //会話が終わっている場合
+    await cntref.set(0);
+
     var phrase = "";
-    var ref = database.ref("dfLog/" + fkey + "/");
+    var ref_dfLog = database.ref("dfLog/" + fkey + "/");
     var key = ref.key;
     var text = params.Response;
     var intent = params.Intent;
@@ -273,7 +278,7 @@ exports.RTDBSend_Params = async function(params,fkey,face){
     var dpName = intent;
 
     //データセット
-    var json = {
+    var json_dfLog = {
       firebasekey : key,
       Phrase : phrase,
       name : name,
@@ -281,7 +286,7 @@ exports.RTDBSend_Params = async function(params,fkey,face){
     };
 
     //接続
-    await ref.set(json , function(err){
+    await ref_dfLog.set(json_dfLog , function(err){
       if(err){
         //接続失敗
         console.error(err);
@@ -292,8 +297,10 @@ exports.RTDBSend_Params = async function(params,fkey,face){
         //console.log("send Data-> " + json);
       }
     });
-    await cntref.set(0);
+    
   }
+
+  return;
 }
 
 exports.RTDBSend_Fallback = async function(Intent){
