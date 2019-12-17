@@ -314,6 +314,8 @@ exports.RTDBGetter = async function(){
   var mailref = database.ref("minus/");
   let cntref = db2.ref("00000000/stats/count/");
   let noticeref = database.ref("chat/");
+  let isBotref = database.ref("stats/isBot/");
+
   setTimeout(() => {
     //サーバー起動直後のファイアーストーム対策
     mail_rtdb = require('./mail_s.js');
@@ -408,6 +410,23 @@ exports.RTDBGetter = async function(){
     });
     
   },function(errorObject){
+    console.log("The read failed: " + errorObject.code);
+  });
+
+  isBotref.on("value", async function(snapshot){
+     let ref = isBotref
+    //await console.log("isBot ->" + snapshot.val());
+    if(snapshot.val()){
+      //console.log("no functions");
+    }
+    else{
+      setTimeout(()=>{
+        console.log("reset isBot");
+        ref.set(true);
+      },1000 * 60 * 10);
+      //console.log("set isBot");
+    }
+  },function(errorObject) {
     console.log("The read failed: " + errorObject.code);
   });
 } 
