@@ -414,7 +414,132 @@ exports.RTDBGetter = async function(){
 
 exports.RTDBCleanup = async function(){
   console.log("cleanup");
-  cron.schedule('0-30 * * * * *', () => console.log('実行'));
+  let ref_senti = database.ref("sentiment/");
+  let ref_dfLog = database.ref("dfLog/");
+  let ref_chat = database.ref("chat/");
+  let ref_minus = database.ref("minus/");
+  let ref_sleeptime = database.ref("sleeptime/");
+
+  cron.schedule('0 0 0 * * *', async function(){
+    let time = moment().tz("Asia/Tokyo").format("YYYY/MM/DD,HH:mm:ss");
+    console.log("Execution :"+ time);
+
+    await ref_senti.once("value", async function(data){
+      //要素数の取得
+      let length = await data.numChildren();
+      //要素が100超えていたら実行
+      if(length > 100){
+        let rem_num = length - 100;
+        //let rem_num = 2;
+        console.log("semtiment remove number :" + rem_num);
+        try{
+          //古いデータを指定
+          let ref_rmv = ref_senti.limitToFirst(rem_num);
+          let keys;
+          //古いデータの取得
+          await ref_rmv.once("value", async function(data){
+            keys = await data.val();
+          });
+         //古いデータを削除
+          Object.keys(keys).forEach(async function(key){
+            await ref_senti.child(key).remove();
+          });
+        }
+        catch(e){
+          console.warn("Exception :" +e);
+        }
+      }
+    });
+
+    ref_dfLog.once("value", async function(data){
+      let length = await data.numChildren();
+      if(length > 100){
+        //let rem_num = length - 100;
+        let rem_num = 1;
+        console.log("dfLog remove number :" + rem_num);
+        try{
+          let ref_rmv = ref_dfLog.limitToFirst(rem_num);
+          let keys;
+          await ref_rmv.once("value", async function(data){
+            keys = await data.val();
+          });
+          Object.keys(keys).forEach(async function(key){
+            await ref_dfLog.child(key).remove();
+          });
+        }
+        catch(e){
+          console.warn("Exception :" +e);
+        }
+      }
+    });
+
+    ref_chat.once("value", async function(data){
+      let length = await data.numChildren();
+      if(length > 100){
+        //let rem_num = length - 100;
+        let rem_num = 1;
+        console.log("chat remove number :" + rem_num);
+        try{
+          let ref_rmv = ref_chat.limitToFirst(rem_num);
+          let keys;
+          await ref_rmv.once("value", async function(data){
+            keys = await data.val();
+          });
+          Object.keys(keys).forEach(async function(key){
+            await ref_chat.child(key).remove();
+          });
+        }
+        catch(e){
+          console.warn("Exception :" +e);
+        }
+      }
+    });
+
+    ref_minus.once("value", async function(data){
+      let length = await data.numChildren();
+      if(length > 100){
+        //let rem_num = length - 100;
+        let rem_num = 1;
+        console.log("minus remove number :" + rem_num);
+        try{
+          let ref_rmv = ref_minus.limitToFirst(rem_num);
+          let keys;
+          await ref_rmv.once("value", async function(data){
+            keys = await data.val();
+          });
+          Object.keys(keys).forEach(async function(key){
+            await ref_minus.child(key).remove();
+          });
+        }
+        catch(e){
+          console.warn("Exception :" +e);
+        }
+      }
+    });
+
+    ref_sleeptime.once("value", async function(data){
+      let length = await data.numChildren();
+      if(length > 100){
+        //let rem_num = length - 100;
+        let rem_num = 1;
+        console.log("minus remove number :" + rem_num);
+        try{
+          let ref_rmv = ref_sleeptime.limitToFirst(rem_num);
+          let keys;
+          await ref_rmv.once("value", async function(data){
+            keys = await data.val();
+          });
+          Object.keys(keys).forEach(async function(key){
+            await ref_sleeptime.child(key).remove();
+          });
+        }
+        catch(e){
+          console.warn("Exception :" +e);
+        }
+      }
+    });
+    
+  });
 }
 
 async function IntentSeparator(intent){
