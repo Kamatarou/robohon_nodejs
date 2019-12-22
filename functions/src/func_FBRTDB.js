@@ -439,7 +439,7 @@ exports.RTDBCleanup = async function(){
   let ref_minus = database.ref("minus/");
   let ref_sleeptime = database.ref("sleeptime/");
 
-  cron.schedule('0 0 0 * * *', async function(){
+  cron.schedule('0 0 * * *', async function(){
     let time = moment().tz("Asia/Tokyo").format("YYYY/MM/DD,HH:mm:ss");
     console.log("Execution :"+ time);
 
